@@ -1,6 +1,4 @@
 from django.db import models
-from .pasien import Pasien
-from .apotek import Obat
 
 _short_length = 100
 _medium_length = 255
@@ -20,7 +18,7 @@ class Klinik(models.Model):
 
 class Kunjungan(models.Model):
     kode = models.CharField(max_length=_short_length, unique=True)
-    no_pasien = models.ForeignKey('Pasien', on_delete=models.CASCADE)
+    pasien = models.ForeignKey('Pasien', on_delete=models.CASCADE)
     klinik = models.ForeignKey('Klinik', on_delete=models.CASCADE)
     dokter = models.ForeignKey('Dokter', on_delete=models.CASCADE)
     asal = models.CharField(max_length=_short_length)
@@ -28,6 +26,7 @@ class Kunjungan(models.Model):
     klaim = models.IntegerField()
     cash = models.IntegerField()
     koreksi = models.ForeignKey('Kunjungan', on_delete=models.SET_NULL, null=True)
+    waktu_kunjungan = models.DateTimeField(auto_now_add=True)
 
 class Diagnosis(models.Model):
     nama = models.CharField(max_length=_medium_length)
@@ -51,3 +50,7 @@ class Tindakan_Kunjungan(models.Model):
 class Diagnosis_Kunjungan(models.Model):
     kunjungan = models.ForeignKey('Kunjungan', on_delete=models.CASCADE)
     Diagnosis = models.ManyToManyField('Diagnosis')
+
+class Tarif_Kunjungan(models.Model):
+    kategori_pasien = models.CharField(max_length=_short_length)
+    tarif = models.IntegerField()
