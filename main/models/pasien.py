@@ -62,7 +62,7 @@ class Pasien(models.Model):
         parameter_subsidi = Parameter_Subsidi_Tindakan.objects.filter(kategori_pasien=self.kategori)
         
         for subsidi in parameter_subsidi :
-            new_subsidi = subsidi.Subsidi_Tindakan(self, subsidi)
+            new_subsidi = Subsidi_Tindakan(self, subsidi)
             new_subsidi.save()
 
     def init_subsidi_kunjungan(self):
