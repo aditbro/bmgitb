@@ -15,7 +15,7 @@ class Pasien(models.Model):
     tempat_lahir = models.CharField(max_length=_medium_length)
     tanggal_lahir = models.DateField('tanggal lahir')
     gender = models.CharField(max_length=_short_length)
-    waktu_registrasi = models.DateTimeField(auto_now_add=True)
+    waktu_registrasi = models.DateTimeField(auto_now_add=True, null=True)
     email = models.CharField(max_length=_short_length, null=True)
     no_telepon = models.CharField(max_length=_short_length, null=True)
     no_hp = models.CharField(max_length=_short_length, null=True)
@@ -26,7 +26,7 @@ class Pasien(models.Model):
     kota = models.CharField(max_length=_short_length, null=True)
     subsidi_initiated = False
 
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         required_column = ['kategori', 'nama', 'tipe_kartu_identitas', 'nomor_kartu_identitas', 'tempat_lahir', 'tanggal_lahir', 'gender']
         construction_parameter = {}
 
@@ -34,11 +34,12 @@ class Pasien(models.Model):
             construction_parameter[key] = value
             if key in required_column :
                 required_column.remove(key)
-        
-        if required_column :
-            raise Exception("missing parameter(s) " + ", ".join(required_column))
 
-        super().__init__(**construction_parameter)
+        if(not args and kwargs):        
+            if required_column :
+                raise Exception("missing parameter(s) " + ", ".join(required_column))
+
+        super().__init__(*args, **construction_parameter)
 
     def save(self):
         super().save()
@@ -83,7 +84,7 @@ class Mahasiswa(Pasien):
     program_studi = models.CharField(max_length=_short_length)
     fakultas = models.CharField(max_length=_short_length)
 
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         required_column = ['nim']
         construction_parameter = {}
 
@@ -92,10 +93,11 @@ class Mahasiswa(Pasien):
             if key in required_column :
                 required_column.remove(key)
 
-        if required_column :
-            raise Exception("missing parameter(s) " + ", ".join(required_column))
+        if(not args and kwargs):
+            if required_column :
+                raise Exception("missing parameter(s) " + ", ".join(required_column))
 
-        super().__init__(**construction_parameter)
+        super().__init__(*args, **construction_parameter)
 
     def __str__(self):
         return self.nim
@@ -103,7 +105,7 @@ class Mahasiswa(Pasien):
 class Karyawan_BMG(Pasien):
     nip = models.CharField(max_length=_short_length, unique=True)
 
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         required_column = ['nip']
         construction_parameter = {}
 
@@ -112,10 +114,11 @@ class Karyawan_BMG(Pasien):
             if key in required_column :
                 required_column.remove(key)
 
-        if required_column :
-            raise Exception("missing parameter(s) " + ", ".join(required_column))
+        if(not args and kwargs):
+            if required_column :
+                raise Exception("missing parameter(s) " + ", ".join(required_column))
 
-        super().__init__(**construction_parameter)
+        super().__init__(*args, **construction_parameter)
 
     def __str__(self):
         return self.nip
@@ -123,7 +126,7 @@ class Karyawan_BMG(Pasien):
 class Karyawan_ITB(Pasien):
     nip = models.CharField(max_length=_short_length, unique=True)
 
-    def __init__(self, **kwargs):
+    def __init__(self, *args, **kwargs):
         required_column = ['nip']
         construction_parameter = {}
 
@@ -132,10 +135,11 @@ class Karyawan_ITB(Pasien):
             if key in required_column :
                 required_column.remove(key)
 
-        if required_column :
-            raise Exception("missing parameter(s) " + ", ".join(required_column))
+        if(not args and kwargs):
+            if required_column :
+                raise Exception("missing parameter(s) " + ", ".join(required_column))
 
-        super().__init__(**construction_parameter)
+        super().__init__(*args, **construction_parameter)
 
     def __str__(self):
         return self.nip
@@ -143,20 +147,22 @@ class Karyawan_ITB(Pasien):
 class Keluarga_Karyawan_ITB(Pasien):
     karyawan = models.ForeignKey('Karyawan_ITB', on_delete=models.CASCADE)
 
-    def __init__(self, **kwargs):        
+    def __init__(self, *args, **kwargs):        
         if 'karyawan' in kwargs:
             kwargs['karyawan'] = Karyawan_ITB.objects.get(nip=kwargs['karyawan'])
+        elif(args):
+            pass
         else :
             raise Exception('missing parameter(s) karyawan')
 
-        super().__init__(**kwargs)
+        super().__init__(*args, **kwargs)
 
     def __str__(self):
         return self.nip
 
 class Umum(Pasien):
-    def __init__(self, **kwargs):        
-        super().__init__(**kwargs)
+    def __init__(self, *args, **kwargs):        
+        super().__init__(*args, **kwargs)
 
     def __str__(self):
         return self.nama
@@ -164,7 +170,7 @@ class Umum(Pasien):
 class Mitra_Kerja_Sama(Pasien):
     organisasi = models.CharField(max_length=_short_length)
 
-    def __init__(self, **kwargs):        
+    def __init__(self, *args, **kwargs):        
         required_column = ['organisasi']
         construction_parameter = {}
 
@@ -176,7 +182,7 @@ class Mitra_Kerja_Sama(Pasien):
         if required_column :
             raise Exception("missing parameter(s) " + ", ".join(required_column))
 
-        super().__init__(**construction_parameter)
+        super().__init__(*args, **construction_parameter)
 
     def __str__(self):
         return self.nama + ', dari ' + self.organisasi

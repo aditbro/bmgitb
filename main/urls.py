@@ -4,13 +4,12 @@ from . import api
 app_name = 'main'
 urlpatterns = [
     path('pasien/insert/', api.pasien.pasien_insert, name='insert pasien'),
-    # path('pasien/delete/<str:no_pasien>/', api.pasien.pasien_delete, name='delete pasien'),
-    # path('pasien/update/<str:no_pasien>/', api.pasien.pasien_update, name='update pasien'),
-    # path('pasien/<str:no_pasien>/', api.pasien.pasien_get, name='insert pasien'),
+    path('pasien/update/', api.pasien.pasien_update, name='update pasien'),
+    path('pasien/<str:no_pasien>/', api.pasien.pasien_get, name='get pasien'),
+    path('pasien/', api.pasien.pasien_get_list, name='get pasien list'),
     # path('pasien/pegawai/insert/', api.pasien.pegawai_insert, name='insert pegawai'),
     # path('mahasiswa/', api.pasien.mahasiswa_get_list, name='get mahasiswa list'),
     # path('pegawai/', api.pasien.pegawai_get_list, name='get pegawai list'),
-    # path('pasien/', api.pasien.pasien_get_list, name='get pasien list'),
 
     # path('klinik/kunjungan/insert/', api.klinik.kunjungan_insert, name='insert kunjungan'),
     # path('klinik/kunjungan/<str:kode_kunjungan>/', api.klinik.kunjungan_get, name='insert kunjungan'),

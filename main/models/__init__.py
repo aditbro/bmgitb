@@ -8,11 +8,16 @@ from .pasien import Umum
 from .pasien import Mitra_Kerja_Sama
 
 #klinik
-from .klinik import Kunjungan
 from .klinik import Diagnosis
 from .klinik import Klinik
 from .klinik import Dokter
 from .klinik import Tindakan
+
+#kunjungan
+from .kunjungan import Kunjungan
+from .kunjungan import Tindakan_Kunjungan
+from .kunjungan import Parameter_Tarif_Kunjungan
+from .kunjungan import Diagnosis_Kunjungan
 
 #apotek
 from .apotek import Obat
