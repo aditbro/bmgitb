@@ -21,3 +21,19 @@ def get_required_dict(required_column, old_dict):
 def model_list_to_list_of_dict(model_list):
     list_of_dict = [model_to_dict(model) for model in model_list]
     return list_of_dict
+
+def get_sort_parameter(field, direction):
+    if direction == 'asc':
+        direction = ''
+    else :
+        direction = '-'
+
+    return direction + field
+
+def get_entry_range_from_page(page_num, entry_num):
+    page_num = int(page_num)
+    entry_num = int(entry_num)
+    start = (page_num-1) * entry_num
+    end = start + entry_num
+
+    return start, end

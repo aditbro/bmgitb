@@ -6,31 +6,29 @@ from django.utils.datastructures import MultiValueDictKeyError
 from .helper import *
 from ..models import Pasien, Mahasiswa, Karyawan_BMG, Karyawan_ITB, Keluarga_Karyawan_ITB
 from ..models import Mitra_Kerja_Sama, Umum
+import json
+import traceback
 
 def pasien_insert(request):
     if(request.method == 'POST'):
         try :
-            insert_pasien(request.POST.dict())
-            return JsonResponse({'response':'success','code':200})
+            insert_pasien(json.loads(request.body))
+            return JsonResponse({'response':'success'}, status=200)
         except IntegrityError as e:
+            traceback.print_exc()
             error_message = parse_exception(e)[1]
-            response = {'response':'Integrity error '+error_message, 'code':400}
-            return HttpResponse(json.dumps(response))
+            response = {'response':'Integrity error '+error_message}
+            return JsonResponse(response, status=400)
         except Exception as e:
-            response = {'response':'Exception '+e.__str__(), 'code':400}
-            return HttpResponse(json.dumps(response))
+            response = {'response':'Exception '+e.__str__()}
+            return JsonResponse(response, status=400)
     else:
-        return defaults.bad_request(request, request.path_info)
+        return defaults.page_not_found(request, request.path_info)
 
 def insert_pasien(post_form):
-    try :
-        new_pasien = construct_pasien_from_post_form(post_form)
-        new_pasien.save()
-        new_pasien.no_pasien = 'P-' + str(new_pasien.id)
-        new_pasien.save()
-        return new_pasien
-    except Exception as e:
-        raise e
+    new_pasien = construct_pasien_from_post_form(post_form)
+    new_pasien.save()
+    return new_pasien
 
 def construct_pasien_from_post_form(post_form):
     kategori = post_form['kategori']
@@ -49,10 +47,10 @@ def pasien_get(request, no_pasien):
         try :
             pasien = get_pasien(no_pasien)
             pasien = model_to_dict(pasien)
-            return JsonResponse({'pasien':pasien,'response':'success','code':200})
+            return JsonResponse({'pasien':pasien,'response':'success'}, status=200)
         except Exception as e:
-            response = {'response':'Exception '+e.__str__(), 'code':400}
-            return HttpResponse(json.dumps(response))
+            response = {'response':'Exception '+e.__str__()}
+            return JsonResponse(response, status=400)
     else:
         return defaults.bad_request(request, request.path_info)
 
@@ -80,8 +78,8 @@ def pasien_get_list(request):
             pasien_list = transform_pasien_list_to_dict_list(pasien_list)
             return JsonResponse({'pasien':pasien_list,'response':'success','code':200})
         except Exception as e:
-            response = {'response':'Exception '+e.__str__(), 'code':400}
-            return HttpResponse(json.dumps(response))
+            response = {'response':'Exception '+e.__str__()}
+            return JsonResponse(response, status=400)
     else:
         return defaults.bad_request(request, request.path_info)
 
@@ -110,12 +108,6 @@ def get_pasien_list(get_form):
     pasien_list = pasien_class.objects.filter(**get_form).order_by(sort_parameter)[start:end]
     return pasien_list
 
-def get_entry_range_from_page(page_num, entry_num):
-    start = (page_num-1) * entry_num
-    end = start + entry_num
-
-    return start, end
-
 def get_pasien_kategori_class(kategori):
     return {
         'Mahasiswa': Mahasiswa,
@@ -127,19 +119,10 @@ def get_pasien_kategori_class(kategori):
         'Pasien': Pasien
     }.get(kategori, Pasien)
 
-def get_sort_parameter(field, direction):
-    if direction == 'asc':
-        direction = ''
-    else :
-        direction = '-'
-
-    return direction + field
-
 def transform_pasien_list_to_dict_list(pasien_list):
     psn_list = []
     for pasien in pasien_list :
         pasien_dict = model_to_dict(pasien)
-        pasien_dict['waktu_registrasi'] = pasien.waktu_registrasi.strftime('%Y-%m-%d %H:%M')
         psn_list.append(pasien_dict)
 
     return psn_list
@@ -147,16 +130,16 @@ def transform_pasien_list_to_dict_list(pasien_list):
 def pasien_update(request):
     if(request.method == 'POST'):
         try :
-            update_pasien(request.POST.dict())
+            update_pasien(json.loads(request.body))
             return JsonResponse({'response':'success','code':200})
         except IntegrityError as e:
-            error_message = parse_exception(e)[1]
-            response = {'response':'Integrity error '+error_message, 'code':400}
-            return HttpResponse(json.dumps(response))
-        except Exception as e:
-            response = {'response':'Exception '+e.__str__(), 'code':400}
             traceback.print_exc()
-            return HttpResponse(json.dumps(response))
+            error_message = parse_exception(e)[1]
+            response = {'response':'Integrity error '+error_message}
+            return JsonResponse(response, status=400)
+        except Exception as e:
+            response = {'response':'Exception '+e.__str__()}
+            return JsonResponse(response, status=400)
     else:
         return defaults.bad_request(request, request.path_info)
 

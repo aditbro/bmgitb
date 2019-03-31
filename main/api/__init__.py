@@ -1,3 +1,4 @@
 from .pasien import *
-from .klinik import *
+from .kunjungan import *
 from .apotek import *
+from .tindakan import *

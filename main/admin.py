@@ -33,3 +33,6 @@ admin.site.register(PembelianResep)
 
 #klinik
 admin.site.register(Klinik)
+admin.site.register(Tindakan)
+admin.site.register(Dokter)
+admin.site.register(Diagnosis)

@@ -1,5 +1,6 @@
 from django.db import models
-# from .pasien import Pasien
+from .pasien import Pasien
+from .subsidi import Subsidi_Obat
 
 _short_length = 100
 _medium_length = 255
@@ -13,6 +14,9 @@ class Obat(models.Model):
     keterangan = models.CharField(max_length=_long_length)
     harga_otc = models.IntegerField()
     harga_resep = models.IntegerField()
+
+    def __str__(self):
+        return self.nama
 
 class PembelianObatOTC(models.Model):
     pembelianOTC = models.ForeignKey('PembelianOTC', on_delete=models.CASCADE)
@@ -37,5 +41,18 @@ class PembelianResep(models.Model):
     bayar = models.IntegerField()
     waktu_pembelian = models.DateTimeField(auto_now_add=True)
 
-    #TODO tambahin method __init__()
-    #init harus ngitung tarif, subsidi, dan bayar
+    def save(self):
+        super().save()
+        self.reduce_subsidi_pasien()
+
+    def reduce_subsidi_pasien(self):
+        subsidi_pasien = Subsidi_Obat.objects.filter(pasien__id=self.pasien.id)[0]
+        if(subsidi_pasien):
+            subsidi_pasien.sisa_subsidi_bulan_ini -= self.klaim
+            subsidi_pasien.sisa_subsidi_tahunan -= self.klaim
+
+            if(subsidi_pasien.sisa_subsidi_bulan_ini < 0 or subsidi_pasien.sisa_subsidi_tahunan < 0) :
+                raise Exception('Sisa subsidi pasien kurang untuk tindakan {}'.format(self.tindakan.nama))
+
+            subsidi_pasien.save()
+
