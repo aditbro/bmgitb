@@ -11,16 +11,14 @@ RUN apt-get install -y \
     libfreetype6-dev \
     zlib1g-dev \
     net-tools \
-    vim
+    vim \
+    netcat
 # Project Files and Settings
-ARG PROJECT=bmgitb
-ARG PROJECT_DIR=/var/www/${PROJECT}
-RUN mkdir -p $PROJECT_DIR
-WORKDIR $PROJECT_DIR
+WORKDIR /bmgitb
 COPY . .
-RUN pip install -U pipenv
-RUN pipenv install --system
-# Server
-EXPOSE 8080
-ENTRYPOINT ["bash", "entrypoints"]
+RUN pip install -U pipenv && \
+    pipenv install -r requirements.txt && \
+    pipenv install --system
+
+ENTRYPOINT ["bash", "entrypoint.sh"]
 CMD ["runserver", "0.0.0.0:8080"]
