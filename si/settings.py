@@ -74,13 +74,18 @@ WSGI_APPLICATION = 'si.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
+MYSQL_HOSTNAME = os.environ['MYSQL_HOSTNAME']
+MYSQL_DATABASE = os.environ['MYSQL_DATABASE']
+MYSQL_USER = os.environ['MYSQL_USER']
+MYSQL_PASSWORD = os.environ['MYSQL_PASSWORD']
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'si',
-        'USER': 'si',
-        'PASSWORD': 'localtest',
-        'HOST': '127.0.0.1',
+        'NAME': MYSQL_DATABASE,
+        'USER': MYSQL_DATABASE,
+        'PASSWORD': MYSQL_PASSWORD,
+        'HOST': MYSQL_HOSTNAME,
         'PORT': '3306',
     }
 }

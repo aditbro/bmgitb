@@ -3,4 +3,3 @@ Django==2.1.7
 greenlet==0.4.13
 mysqlclient==1.4.2.post1
 pytz==2018.9
-readline==6.2.4.1
