@@ -22,4 +22,5 @@ def pembelian_resep_insert(request):
         return defaults.page_not_found(request, request.path_info)
 
 def insert_pembelian_resep(post_form):
-    pass
+    list_obat = post_form['obat']
+    
