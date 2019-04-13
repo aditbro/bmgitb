@@ -1,0 +1,13 @@
+#!/bin/bash
+
+virtenv="$(pipenv --venv)/bin/activate"
+. $virtenv
+
+
+if [ ! -d 'migrations' ]; then
+python manage.py makemigrations main
+python manage.py migrare
+fi
+
+sleep 5 && \
+python manage.py

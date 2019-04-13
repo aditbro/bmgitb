@@ -1,10 +1,10 @@
-FROM python:3
+FROM python:3.6
 # Install Python and Package Libraries
 RUN apt-get update && apt-get upgrade -y && apt-get autoremove && apt-get autoclean
 RUN apt-get install -y \
     libffi-dev \
     libssl-dev \
-    libmysqlclient-dev \
+    default-libmysqlclient-dev \
     libxml2-dev \
     libxslt-dev \
     libjpeg-dev \
@@ -22,6 +22,5 @@ RUN pip install -U pipenv
 RUN pipenv install --system
 # Server
 EXPOSE 8080
-STOPSIGNAL SIGINT
-ENTRYPOINT ["python", "manage.py"]
+ENTRYPOINT ["./entrypoints"]
 CMD ["runserver", "0.0.0.0:8000"]
