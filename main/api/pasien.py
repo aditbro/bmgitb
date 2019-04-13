@@ -4,11 +4,13 @@ from django.db import IntegrityError
 from django.forms.models import model_to_dict
 from django.utils.datastructures import MultiValueDictKeyError
 from .helper import *
+from .auth_decorators import *
 from ..models import Pasien, Mahasiswa, Karyawan_BMG, Karyawan_ITB, Keluarga_Karyawan_ITB
 from ..models import Mitra_Kerja_Sama, Umum
 import json
 import traceback
 
+@allow_only_roles(['loket', 'admin'])
 def pasien_insert(request):
     if(request.method == 'POST'):
         try :
@@ -42,6 +44,7 @@ def construct_pasien_from_post_form(post_form):
         'Umum': Umum
     }.get(kategori)(**post_form)
 
+@allow_only_roles(['loket', 'admin', 'apotek'])
 def pasien_get(request, no_pasien):
     if(request.method == 'GET'):
         try :
@@ -71,6 +74,7 @@ def get_pasien_with_category(no_pasien):
         'Umum': Umum
     }.get(kategori).objects.get(no_pasien=pasien.no_pasien)
 
+@allow_only_roles(['loket', 'admin', 'apotek'])
 def pasien_get_list(request):
     if(request.method == 'GET'):
         try :
@@ -127,6 +131,7 @@ def transform_pasien_list_to_dict_list(pasien_list):
 
     return psn_list
 
+@allow_only_roles(['loket', 'admin', 'apotek'])
 def pasien_update(request):
     if(request.method == 'POST'):
         try :

@@ -20,5 +20,8 @@ urlpatterns = [
     path('klinik/tindakan/<str:kode_kunjungan>', api.tindakan.tindakan_kunjungan_get_list, name='insert tindakan kunjungan'),
 
     path('apotek/resep/insert/', api.apotek.pembelian_resep_insert, name='insert pembelian resep'),
-    path('apotek/otc/insert/', api.apotek.pembelian_otc_insert, name='insert pembelian resep')
+    path('apotek/otc/insert/', api.apotek.pembelian_otc_insert, name='insert pembelian resep'),
+
+    path('user/authenticate/', api.user_management.user_authenticate, name='login'),
+    path('user/create/', api.user_management.user_insert, name='create user'),
 ]

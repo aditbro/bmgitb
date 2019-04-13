@@ -5,9 +5,11 @@ from django.forms.models import model_to_dict
 from ..models import Pasien, Mahasiswa
 from ..models import Kunjungan, Tindakan_Kunjungan
 from .helper import *
+from .auth_decorators import *
 import json
 import traceback
 
+@allow_only_roles(['loket', 'admin'])
 def tindakan_kunjungan_insert(request):
     if(request.method == 'POST'):
         try :
@@ -34,6 +36,7 @@ def insert_tindakan_kunjungan(post_form):
 
     return list_tindakan
 
+@allow_only_roles(['loket', 'admin', 'apotek'])
 def tindakan_kunjungan_get_list(request, kode_kunjungan):
     if(request.method == 'GET'):
         try :
@@ -65,6 +68,7 @@ def tindakan_kunjungan_to_dict(tindakan):
 
     return ret_tindakan
 
+@allow_only_roles(['loket', 'admin'])
 def tindakan_kunjungan_update(request):
     if(request.method == 'POST'):
         try :

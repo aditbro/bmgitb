@@ -3,11 +3,12 @@ from django.http import HttpResponse, HttpRequest, Http404, JsonResponse
 from django.db import IntegrityError
 from django.forms.models import model_to_dict
 from .helper import *
+from .auth_decorators import *
 from ..models import PembelianResep, PembelianObatResep, Obat, PembelianObatOTC, PembelianOTC
 import json
 import traceback
 
-
+@allow_only_roles(['admin', 'apotek_resep'])
 def pembelian_resep_insert(request):
     if(request.method == 'POST'):
         try :
@@ -42,7 +43,7 @@ def insert_pembelian_resep(post_form):
 
     pembelian_resep.save()
     
-    
+@allow_only_roles(['loket', 'admin', 'apotek_otc'])
 def pembelian_otc_insert(request):
     if(request.method == 'POST'):
         try :

@@ -18,3 +18,6 @@ from .apotek import *
 
 #subsidi
 from .subsidi import *
+
+#user
+from .user import *

@@ -43,3 +43,6 @@ admin.site.register(Klinik)
 admin.site.register(Tindakan)
 admin.site.register(Dokter)
 admin.site.register(Diagnosis)
+
+#user management
+admin.site.register(Client)
