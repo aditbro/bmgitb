@@ -1,0 +1,21 @@
+{% block head %}
+	{% include "common_header.html" %}
+	<link href="{{url_for('static', filename='css/pageDaftar/base_daftar_page.css')}}" rel="stylesheet">
+{% endblock %}
+{% block title %}{{ pageTitle }}{% endblock %}
+{% block body %}
+	{% include "navbar.html" %}
+	<div class="container-fluid">
+		{% include "pengelolaan_data_pasien/daftar_pasien/searchbar.html" %}
+		<div class="row" id="tabel-daftar">
+			{% include "pengelolaan_data_pasien/daftar_pasien/tabel_pasien.html" %}
+		</div>
+		<div class="row" id="navigation-row">
+			{% include "pengelolaan_data_pasien/daftar_pasien/next_prev_button.html" %}
+		</div>
+	</div>
+{% endblock %}
+{% block script %}
+	{% include "script_declaration.html" %}
+	<script src="{{url_for('static', filename='js/pengelolaan_data_pasien/daftar_pasien/daftar_pasien.js')}}"></script>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% block body %}
+<style>
+  {% include "change_password/style.css" %}
+</style>
+
+<h2 class="form-title">Change Password</h2>
+
+<form action="/action_page.php">
+
+  <div class="container">
+    <label for="username"><b>Enter Old Password</b></label>
+    <input type="password" placeholder="Enter Old Password" name="new_password" required>  
+
+    <label for="password"><b>New Password</b></label>
+    <input type="password" placeholder="Enter New Password" name="new_password" required>  
+
+    <label for="password"><b>Confirm New Password</b></label>
+    <input type="password" placeholder="Enter New Password Again" name="confirm_password" required>
+    
+    <div class="row">
+      <button type="submit">Change Password</button>
+    </div> 
+    
+    <div class="forgot-password">Forgot <a href="#">password?</div>
+  </div>
+</form>
+{% endblock %}

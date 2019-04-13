@@ -1,0 +1,16 @@
+{% block head %}
+	{% include "common_header.html" %}
+	<title>{{ pageTitle }}</title>
+	<link href="{{url_for('static', filename='css/main_page.css')}}" rel="stylesheet">
+{% endblock %}
+<body class="background">
+	<div id="overlay"></div>
+	<div id="progress-bar"></div>
+	{% include "navbar.html" %}
+	<div id="content">
+
+	</div>
+</body>
+{% block script %}
+	{% include "script_declaration.html" %}
+{% endblock %}

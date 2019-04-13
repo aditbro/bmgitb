@@ -1,8 +1,11 @@
 from django.urls import path
 from . import api
+from . import views
 
 app_name = 'main'
 urlpatterns = [
+    path('', views.index, name="login page"),
+
     path('pasien/insert/', api.pasien.pasien_insert, name='insert pasien'),
     path('pasien/update/', api.pasien.pasien_update, name='update pasien'),
     path('pasien/<str:no_pasien>/', api.pasien.pasien_get, name='get pasien'),
