@@ -14,5 +14,8 @@ urlpatterns = [
     path('klinik/kunjungan/', api.kunjungan.kunjungan_get_list, name='get kunjungan list'),
 
     path('klinik/tindakan/insert/', api.tindakan.tindakan_kunjungan_insert, name='insert tindakan kunjungan'),
-    path('klinik/tindakan/<str:kode_kunjungan>', api.tindakan.tindakan_kunjungan_get_list, name='insert tindakan kunjungan')
+    path('klinik/tindakan/<str:kode_kunjungan>', api.tindakan.tindakan_kunjungan_get_list, name='insert tindakan kunjungan'),
+
+    path('apotek/resep/insert/', api.apotek.pembelian_resep_insert, name='insert pembelian resep'),
+    path('apotek/otc/insert/', api.apotek.pembelian_otc_insert, name='insert pembelian resep')
 ]
