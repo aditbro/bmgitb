@@ -6,7 +6,7 @@ services:
     stdin_open: true
     tty: true
     volumes:
-      - .:/var/www/bmgitb
+      - '.:/var/www/bmgitb'
     ports:
       - "8080:8080"
     env_file:
@@ -19,6 +19,6 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - './db:/var/lib/mysql:rw'
+      - './db:/var/lib/mysql'
     env_file:
       - .env

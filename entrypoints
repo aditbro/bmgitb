@@ -1,13 +1,10 @@
 #!/bin/bash
 
-virtenv="$(pipenv --venv)/bin/activate"
-. $virtenv
-
-
 if [ ! -d 'migrations' ]; then
 python manage.py makemigrations main
-python manage.py migrare
+python manage.py migrate
+python manage.py syncdb --noinput
+echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', 'admin@itb.ac.id', 'passukan')" | python manage.py shell
 fi
 
-sleep 5 && \
-python manage.py
+python manage.py $@
