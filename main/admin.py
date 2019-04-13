@@ -2,6 +2,13 @@ from django.contrib import admin
 from main.models import *
 
 # Register your models here.
+class PembelianResepAdmin(admin.ModelAdmin):
+     model = PembelianResep
+     filter_horizontal = ('obat',)
+
+class PembelianOTCAdmin(admin.ModelAdmin):
+     model = PembelianOTC
+     filter_horizontal = ('obat',)
 
 #subsidi
 admin.site.register(Parameter_Subsidi_Kunjungan)
@@ -28,8 +35,8 @@ admin.site.register(Parameter_Tarif_Kunjungan)
 
 #apotek
 admin.site.register(Obat)
-admin.site.register(PembelianOTC)
-admin.site.register(PembelianResep)
+admin.site.register(PembelianOTC, PembelianOTCAdmin)
+admin.site.register(PembelianResep, PembelianResepAdmin)
 
 #klinik
 admin.site.register(Klinik)
