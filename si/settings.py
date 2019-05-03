@@ -25,7 +25,7 @@ SECRET_KEY = '+8+bj)3vduo-s1hjv!&v5%f$b6l8m8lcfy7q&5phoxpe4e7m72'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'udx.web.id']
 
 
 # Application definition

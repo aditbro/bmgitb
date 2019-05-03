@@ -4,19 +4,19 @@ services:
   database:
     image: mysql:5.7
     restart: always
-    ports:
-      - "3306:3306"
     volumes:
-      - ./db:/var/lib/mysql
+      - ./mysql:/var/lib/mysql
     env_file:
       - .env
 
   bmgitb:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile-bmgitb
     image: bmgitb
     stdin_open: true
     tty: true
-    entrypoint: ["bash", "entrypoint.sh"]
+    entrypoint: ["sh", "entrypoint.sh"]
     command: ["runserver", "0.0.0.0:8080"]
     volumes:
       - ./:/bmgitb
