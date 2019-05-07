@@ -31,13 +31,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'main.apps.MainConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'main.apps.MainConfig'
 ]
 
 MIDDLEWARE = [
@@ -74,18 +74,18 @@ WSGI_APPLICATION = 'si.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-MYSQL_HOSTNAME = os.environ['MYSQL_HOSTNAME']
-MYSQL_DATABASE = os.environ['MYSQL_DATABASE']
-MYSQL_ROOT_PASSWORD = os.environ['MYSQL_ROOT_PASSWORD']
+# MYSQL_HOSTNAME = os.environ['MYSQL_HOSTNAME']
+# MYSQL_DATABASE = os.environ['MYSQL_DATABASE']
+# MYSQL_ROOT_PASSWORD = os.environ['MYSQL_ROOT_PASSWORD']
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': MYSQL_HOSTNAME,
+        'HOST': 'localhost',
         'PORT': '3306',
-        'NAME': MYSQL_DATABASE,
-        'USER': 'root',
-        'PASSWORD': MYSQL_ROOT_PASSWORD,
+        'NAME': 'si',
+        'USER': 'si',
+        'PASSWORD': 'localtest',
     }
 }
 
@@ -127,3 +127,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static")
+]
