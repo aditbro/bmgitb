@@ -23,7 +23,7 @@ class Client(User) :
         else :
             client = client[0]
 
-        if client.token_expire_time < datetime.datetime.now(datetime.timezone.utc):
+        if client.token_expire_time < datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=7))):
             client.access_token = ''
             client.save()
             raise Exception('invalid token')
@@ -42,9 +42,10 @@ class Client(User) :
             return client
 
     @classmethod
-    def create_client(cls, username, password):
-        pseudo_email = username + '@jabar.org'
+    def create_client(cls, username, password, bagian):
+        pseudo_email = username + '@bmg.itb.ac.id'
         client = Client.objects.create_user(username, pseudo_email, password)
+        client.bagian = bagian
 
         return client
 
@@ -61,7 +62,7 @@ class Client(User) :
         token = str(uuid.uuid1())
         self.access_token = token
         
-        now = datetime.datetime.now()
+        now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=7)))
         token_valid_duration = datetime.timedelta(days=1)
         self.token_expire_time = now + token_valid_duration
         self.save()

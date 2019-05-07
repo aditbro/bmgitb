@@ -16,7 +16,7 @@ def parameterized(dec):
 def require_token(func):
     def wrapper(request, *args, **kwargs):
         try:
-            token = request.headers.get('Access-Token', '')
+            token = request.META['HTTP_ACCESS_TOKEN']
             user = Client.authenticate_access_token(token)
             
             return func(request, *args, **kwargs)
@@ -30,7 +30,7 @@ def require_token(func):
 def allow_only_roles(func, roles):
     def wrapper(request, *args, **kwargs):
         try:
-            token = request.headers['Access-Token']
+            token = request.META['HTTP_ACCESS_TOKEN']
             user = Client.authenticate_access_token(token)
             check_if_user_has_role(user, roles)
 

@@ -20,9 +20,8 @@ def user_insert(request):
         return defaults.page_not_found(request, request.path_info)
 
 def insert_user(post_form):
-    print(post_form)
     if('username' in post_form and 'password' in post_form):
-        client = Client.create_client(post_form['username'], post_form['password'])
+        client = Client.create_client(post_form['username'], post_form['password'], post_form['bagian'])
         client.save()
     else:
         raise Exception("parameter tidak lengkap")
@@ -30,9 +29,8 @@ def insert_user(post_form):
 def user_authenticate(request):
     if(request.method == 'POST'):
         try :
-            print(json.loads(request.body))
             user = authenticate_user(json.loads(request.body))
-            return JsonResponse({'access_token' : user.access_token}, status = 200)
+            return JsonResponse({'Access-Token' : user.access_token}, status = 200)
         except Exception as e:
             traceback.print_exc()
             response = {'response' : 'Exception '+e.__str__()}
@@ -52,7 +50,7 @@ def authenticate_user(post_form):
 def profile_get(request) :
     if(request.method == 'GET'):
         try :
-            user = get_user(request.headers)
+            user = get_user(request.META['HTTP_ACCESS_TOKEN'])
             user = model_to_dict(user)
             return JsonResponse({'user' : user}, status = 200)
         except Exception as e:
@@ -61,6 +59,6 @@ def profile_get(request) :
     else :
         return defaults.page_not_found(request, request.path_info)
 
-def get_user(get_header):
-    user = Client.authenticate_access_token(get_header['Access-Token'])
+def get_user(token):
+    user = Client.authenticate_access_token(token)
     return user

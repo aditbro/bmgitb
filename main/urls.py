@@ -24,4 +24,5 @@ urlpatterns = [
 
     path('user/authenticate/', api.user_management.user_authenticate, name='login'),
     path('user/create/', api.user_management.user_insert, name='create user'),
+    path('user/profile/', api.user_management.profile_get, name='get user profile'),
 ]
