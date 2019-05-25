@@ -62,7 +62,7 @@ class PembelianResep(models.Model):
     tarif = models.IntegerField()
     subsidi = models.IntegerField()
     bayar = models.IntegerField()
-    obat = models.ManyToManyField('PembelianObatResep', null=True, blank=True)
+    obat = models.ManyToManyField('PembelianObatResep', blank=True)
     waktu_pembelian = models.DateTimeField(auto_now_add=True)
 
     def __init__(self, *args, **kwargs):

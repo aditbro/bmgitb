@@ -1,8 +1,9 @@
-from django.contrib.auth.models import User
-from django.db import models
-from django.contrib.auth import authenticate
 import datetime
+import hashlib
 import uuid
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
+from django.db import models
 
 _short_length = 100
 _medium_length = 255
@@ -13,6 +14,15 @@ class Client(User) :
     token_expire_time = models.DateTimeField(null=True, blank=True)
     created_date = models.DateField(auto_now_add=True)
     bagian = models.CharField(max_length=_short_length)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)        
+        self.is_active = True
+        self.is_staff = True
+        if(len(self.password) < 80):
+            self.password = self.hash_password(self.password)
+            self.is_password_hashed = True
+
 
     @classmethod
     def authenticate_access_token(cls, access_token):
@@ -32,14 +42,13 @@ class Client(User) :
 
     @classmethod
     def authenticate_credentials(cls, username, password):
-        user = authenticate(username=username, password=password)
-        
-        if not user :
-            raise Exception('invalid credentials')
+        client = cls.get_client(username)
+        if(not client.check_password(password)):            
+            return None
         else :
-            client = cls.get_client(user.username)
             client.generate_access_token()
             return client
+
 
     @classmethod
     def create_client(cls, username, password, bagian):
@@ -68,3 +77,24 @@ class Client(User) :
         self.save()
 
         return self.access_token
+
+    def hash_password(self, password):
+        salt = uuid.uuid4().hex        
+        return hashlib.sha256(salt.encode() + password.encode()).hexdigest() + ':' + salt
+        
+    def check_password(self, user_password):
+        password, salt = self.password.split(':')
+        return password == hashlib.sha256(salt.encode() + user_password.encode()).hexdigest()
+
+class ClientBackEnd():
+    def authenticate(self, request, username=None, password=None):
+        return Client.authenticate_credentials(username, password)
+
+    def get_user(self, user_id):
+        try:
+            return Client.objects.get(id=user_id)
+        except Client.DoesNotExist:
+            return None
+
+    def has_perm(self, user_obj, perm, obj=None):
+        return True

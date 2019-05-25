@@ -1,2 +1,1 @@
-from .user import *
-from .klinik import *
+from .models import *
