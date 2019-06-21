@@ -1,9 +1,8 @@
 {% load static %}
 <!DOCTYPE html>
+<html lang="id">
 <head>
-  {% include 'website/global_font.html' %}
-  <link rel="stylesheet" href="{% static 'css/materialize.css'%}">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  {% include 'website/common_header.html' %}
 </head>
 <style>
 html,
@@ -17,7 +16,7 @@ body,
     <div class="col card hoverable s10 pull-s1 m6 pull-m3 l4 pull-l4">
       <form>
         <div class="card-content">
-          <span class="card-title center-align" style="font-size: 2.5em">Login</span>
+          <span class="card-title center-align" style="font-size: 2.5em">BMG Login</span>
           <div class="row">
             <div class="input-field col s12">
               <label for="username">Username</label>
@@ -35,6 +34,7 @@ body,
       </form>
     </div>
   </div>
-  <script src="{% static 'js/materialize.min.js' %}"></script>
+  {% include 'website/common_script.html' %}
   <script src="{% static 'js/website/login/login.js' %}"></script>
 </body>
+</html>

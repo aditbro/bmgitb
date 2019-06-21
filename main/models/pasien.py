@@ -2,6 +2,7 @@ from django.db import models
 from django.forms.models import model_to_dict
 from .subsidi import Subsidi_Kunjungan, Subsidi_Obat, Subsidi_Tindakan
 from datetime import datetime
+from main.helper.randomizer import random_string
 
 _short_length = 100
 _medium_length = 255
@@ -16,7 +17,7 @@ class Pasien(models.Model):
     tempat_lahir = models.CharField(max_length=_medium_length)
     tanggal_lahir = models.DateField('tanggal lahir')
     gender = models.CharField(max_length=_short_length)
-    waktu_registrasi = models.DateTimeField(blank=True)
+    waktu_registrasi = models.DateTimeField(auto_now_add=True, blank=True)
     email = models.CharField(max_length=_short_length, null=True, blank=True)
     no_telepon = models.CharField(max_length=_short_length, null=True, blank=True)
     no_hp = models.CharField(max_length=_short_length, null=True, blank=True)
@@ -25,26 +26,23 @@ class Pasien(models.Model):
     catatan = models.CharField(max_length=_long_length, null=True, blank=True)
     alamat = models.CharField(max_length=_long_length, null=True, blank=True)
     kota = models.CharField(max_length=_short_length, null=True, blank=True)
-    subsidi_initiated = models.BooleanField(null=True, blank=True)
 
     def save(self):
-        self.save_waktu_registrasi()
         super().save()
-        self.no_pasien = 'P-' + str(self.id)
+        self.no_pasien = self.new_id()
         super().save()
         if(not self.subsidi_initiated):
             self.init_subsidi()
             self.subsidi_initiated = True
             super().save()
 
+    def new_id(self):
+        return random_string(6)
+
     def init_subsidi(self):
         Subsidi_Kunjungan.create_pasien_subsidi_from_parameter(self)
         Subsidi_Obat.create_pasien_subsidi_from_parameter(self)
         Subsidi_Tindakan.create_pasien_subsidi_from_parameter(self)
-
-    def save_waktu_registrasi(self):
-        if(not self.waktu_registrasi):
-            self.waktu_kunjungan = datetime.now()
 
     def __str__(self):
         return self.nama

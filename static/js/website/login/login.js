@@ -33,5 +33,5 @@ function saveAccessTokenToCookie(token) {
 }
 
 function moveToMainPage() {
-
+    
 }

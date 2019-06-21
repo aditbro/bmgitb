@@ -7,7 +7,7 @@ from main.tests.factories import generate_clients
 
 class UserModelTestCases(TestCase):
     '''test the validity of user model'''
-    def setUp(self):
+    def setUpTestData(self):
         '''setup user data'''
         self.users = generate_clients(10)
         for user in self.users:

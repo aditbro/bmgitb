@@ -7,9 +7,11 @@ from .helper import *
 from .auth_decorators import *
 from ..models import Pasien, Mahasiswa, Karyawan_BMG, Karyawan_ITB, Keluarga_Karyawan_ITB
 from ..models import Mitra_Kerja_Sama, Umum
+from django.views.decorators.http import require_POST
 import json
 import traceback
 
+@require_POST
 @allow_only_roles(['loket', 'admin'])
 def pasien_insert(request):
     if(request.method == 'POST'):
@@ -17,7 +19,6 @@ def pasien_insert(request):
             insert_pasien(json.loads(request.body))
             return JsonResponse({'response':'success'}, status=200)
         except IntegrityError as e:
-            traceback.print_exc()
             error_message = parse_exception(e)[1]
             response = {'response':'Integrity error '+error_message}
             return JsonResponse(response, status=400)
