@@ -15,7 +15,7 @@ from main.models import (
 )
 
 class PasienCreator():
-    def __init__()
+    def __init__(self, )
     def save(self):
         self.save_waktu_registrasi()
         super().save()
