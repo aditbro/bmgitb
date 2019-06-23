@@ -2,7 +2,6 @@ from django.db import models
 from django.forms.models import model_to_dict
 from .subsidi import Subsidi_Kunjungan, Subsidi_Obat, Subsidi_Tindakan
 from datetime import datetime
-from main.helper.randomizer import random_string
 
 _short_length = 100
 _medium_length = 255

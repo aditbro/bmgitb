@@ -1,11 +1,5 @@
 '''generate random user data'''
 
-from main.helper.randomizer import (
-    random_string,
-    random_int,
-    random_bool
-)
-
 from main.models import (
     Pasien,
     Mahasiswa,
@@ -25,25 +19,25 @@ def generate_pasiens(amount, kategori='Pasien'):
     fake = Faker()
     pasiens = []
     for _ in range(amount):
-        pasiens.append(
-            Pasien(
-                no_pasien = Pasien.new_id,
-                kategori = kategori,
-                nama = fake.name(),
-                tipe_kartu_identitas = choice(['KTP', 'KTM', 'SIM']),
-                nomor_kartu_identitas = fake.pystr,
-                tempat_lahir = fake.pystr,
-                tanggal_lahir = fake.date_object(end_datetime=date.today()),
-                gender = choice(['laki-laki', 'perempuan']),
-                waktu_registrasi = datetime.now(),
-                email = fake.email(),
-                no_telepon = fake.msisdn(),
-                no_hp = fake.msisdn(),
-                golongan_darah = choice(['A','B','AB','O']),
-                rhesus = choice(['+','-']),
-                catatan = fake.paragraph(),
-                alamat = fake.address(),
-                kota = fake.city(),
-            ).save()
+        new_pasien = Pasien(
+            no_pasien = Pasien.new_id,
+            kategori = kategori,
+            nama = fake.name(),
+            tipe_kartu_identitas = choice(['KTP', 'KTM', 'SIM']),
+            nomor_kartu_identitas = fake.pystr,
+            tempat_lahir = fake.pystr,
+            tanggal_lahir = fake.date_object(end_datetime=date.today()),
+            gender = choice(['laki-laki', 'perempuan']),
+            waktu_registrasi = datetime.now(),
+            email = fake.email(),
+            no_telepon = fake.msisdn(),
+            no_hp = fake.msisdn(),
+            golongan_darah = choice(['A','B','AB','O']),
+            rhesus = choice(['+','-']),
+            catatan = fake.paragraph(),
+            alamat = fake.address(),
+            kota = fake.city(),
         )
+        pasiens.append(new_pasien)
+        new_pasien.save()
     return pasiens
