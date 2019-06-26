@@ -3,30 +3,29 @@ from django.http import HttpResponse, HttpRequest, Http404, JsonResponse
 from django.db import IntegrityError
 from django.forms.models import model_to_dict
 from django.utils.datastructures import MultiValueDictKeyError
+from django.views.decorators.http import require_POST
 from .helper import *
-from .auth_decorators import *
+from .auth_decorators import allow_only_roles
 from ..models import Pasien, Mahasiswa, Karyawan_BMG, Karyawan_ITB, Keluarga_Karyawan_ITB
 from ..models import Mitra_Kerja_Sama, Umum
-from django.views.decorators.http import require_POST
 import json
 import traceback
+import pry
+from main.services.pasien import PasienCreator
 
 @require_POST
 @allow_only_roles(['loket', 'admin'])
 def pasien_insert(request):
-    if(request.method == 'POST'):
-        try :
-            insert_pasien(json.loads(request.body))
-            return JsonResponse({'response':'success'}, status=200)
-        except IntegrityError as e:
-            error_message = parse_exception(e)[1]
-            response = {'response':'Integrity error '+error_message}
-            return JsonResponse(response, status=400)
-        except Exception as e:
-            response = {'response':'Exception '+e.__str__()}
-            return JsonResponse(response, status=400)
-    else:
-        return defaults.page_not_found(request, request.path_info)
+    try :
+        PasienCreator(json.loads(request.body)).create()
+        return JsonResponse({'response':'success'}, status=200)
+    except IntegrityError as e:
+        error_message = parse_exception(e)[1]
+        response = {'response':'Integrity error '+error_message}
+        return JsonResponse(response, status=400)
+    except Exception as e:
+        response = {'response':'Exception '+e.__str__()}
+        return JsonResponse(response, status=400)
 
 def insert_pasien(post_form):
     new_pasien = construct_pasien_from_post_form(post_form)

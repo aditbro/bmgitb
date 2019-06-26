@@ -21,7 +21,7 @@ class PasienFactory(DjangoModelFactory):
         model = Pasien
 
     no_pasien = Pasien.new_id()
-    kategori = choice(['Umum', 'Mahasiswa', 'Karyawan_BMG', 'Mitra_Kerja_Sama'])
+    kategori = choice(['Umum', 'Mahasiswa', 'Karyawan BMG', 'Mitra Kerja Sama'])
     nama = Faker().name()
     tipe_kartu_identitas = choice(['KTP', 'KTM', 'SIM'])
     nomor_kartu_identitas = Faker().pystr()

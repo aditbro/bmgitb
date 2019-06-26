@@ -15,22 +15,32 @@ from main.models import (
 )
 
 class PasienCreator():
-    def __init__(self, )
-    def save(self):
-        self.save_waktu_registrasi()
-        super().save()
-        self.no_pasien = 'P-' + str(self.id)
-        super().save()
-        if(not self.subsidi_initiated):
-            self.init_subsidi()
-            self.subsidi_initiated = True
-            super().save()
+    def __init__(self, params):
+        self.params = params
+
+    def create(self):
+        self.create_pasien()
+        self.init_subsidi()
+        return self.pasien
+
+    def create_pasien(self):
+        self.pasien = self.construct_pasien()
+        self.pasien.save()
+
+    def construct_pasien(self):
+        kategori = self.params['kategori']
+        self.params['no_pasien'] = Pasien.new_id
+        
+        return {
+            'Mahasiswa': Mahasiswa,
+            'Karyawan BMG': Karyawan_BMG,
+            'Karyawan ITB': Karyawan_ITB,
+            'Keluarga Karyawan': Keluarga_Karyawan_ITB,
+            'Mitra Kerja Sama': Mitra_Kerja_Sama,
+            'Umum': Umum
+        }.get(kategori)(**self.params)
 
     def init_subsidi(self):
-        Subsidi_Kunjungan.create_pasien_subsidi_from_parameter(self)
-        Subsidi_Obat.create_pasien_subsidi_from_parameter(self)
-        Subsidi_Tindakan.create_pasien_subsidi_from_parameter(self)
-
-    def save_waktu_registrasi(self):
-        if(not self.waktu_registrasi):
-            self.waktu_kunjungan = datetime.now()
+        Subsidi_Kunjungan.create_pasien_subsidi_from_parameter(self.pasien)
+        Subsidi_Obat.create_pasien_subsidi_from_parameter(self.pasien)
+        Subsidi_Tindakan.create_pasien_subsidi_from_parameter(self.pasien)
