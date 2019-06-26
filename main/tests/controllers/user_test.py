@@ -3,14 +3,14 @@
 from django.test import TestCase
 from django.forms.models import model_to_dict
 from main.models import Client
-from main.tests.factories import generate_clients
+from main.tests.factories import ClientFactory
 
 class UserModelTestCases(TestCase):
     '''test the validity of user model'''
 
     def setUp(self):
         '''setup user data'''
-        self.users = generate_clients(3)
+        self.users = ClientFactory.create_batch(3)
 
     def test_user_can_generate_access_token(self):
         '''test if user can generate access token'''

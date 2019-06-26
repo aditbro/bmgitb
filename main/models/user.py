@@ -79,7 +79,7 @@ class Client(User) :
         return self.access_token
 
     def hash_password(self, password):
-        salt = uuid.uuid4().hex        
+        salt = uuid.uuid4().hex
         return hashlib.sha256(salt.encode() + password.encode()).hexdigest() + ':' + salt
         
     def check_password(self, user_password):

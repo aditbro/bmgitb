@@ -13,31 +13,27 @@ from main.models import (
 from faker import Faker
 from random import choice
 from datetime import datetime, date
+from factory.django import DjangoModelFactory
 
-def generate_pasiens(amount, kategori='Pasien'):
+class PasienFactory(DjangoModelFactory):
     '''Generate random pasien data'''
-    fake = Faker()
-    pasiens = []
-    for _ in range(amount):
-        new_pasien = Pasien(
-            no_pasien = Pasien.new_id,
-            kategori = kategori,
-            nama = fake.name(),
-            tipe_kartu_identitas = choice(['KTP', 'KTM', 'SIM']),
-            nomor_kartu_identitas = fake.pystr,
-            tempat_lahir = fake.pystr,
-            tanggal_lahir = fake.date_object(end_datetime=date.today()),
-            gender = choice(['laki-laki', 'perempuan']),
-            waktu_registrasi = datetime.now(),
-            email = fake.email(),
-            no_telepon = fake.msisdn(),
-            no_hp = fake.msisdn(),
-            golongan_darah = choice(['A','B','AB','O']),
-            rhesus = choice(['+','-']),
-            catatan = fake.paragraph(),
-            alamat = fake.address(),
-            kota = fake.city(),
-        )
-        pasiens.append(new_pasien)
-        new_pasien.save()
-    return pasiens
+    class Meta:
+        model = Pasien
+
+    no_pasien = Pasien.new_id()
+    kategori = choice(['Umum', 'Mahasiswa', 'Karyawan_BMG', 'Mitra_Kerja_Sama'])
+    nama = Faker().name()
+    tipe_kartu_identitas = choice(['KTP', 'KTM', 'SIM'])
+    nomor_kartu_identitas = Faker().pystr()
+    tempat_lahir = Faker().pystr()
+    tanggal_lahir = Faker().date_object(end_datetime=date.today())
+    gender = choice(['laki-laki', 'perempuan'])
+    waktu_registrasi = datetime.now()
+    email = Faker().email()
+    no_telepon = Faker().msisdn()
+    no_hp = Faker().msisdn()
+    golongan_darah = choice(['A','B','AB','O'])
+    rhesus = choice(['+','-'])
+    catatan = Faker().paragraph()
+    alamat = Faker().address()
+    kota = Faker().city()
