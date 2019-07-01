@@ -67,7 +67,7 @@ class PasienControllerTestCase(TestCase):
         response = Request().get('/main/pasien/', **self.auth_headers)
         self.assertEqual(response.status_code, 200)
 
-        expected_list = GetModelList(Pasien, sort_field='waktu_registrasi').call()
+        expected_list = GetModelList(Pasien).call()
         fetched_list = json.loads(response.content)['pasien']
 
         for i in range(len(expected_list)):
@@ -76,6 +76,22 @@ class PasienControllerTestCase(TestCase):
             self.assertEqual(fetched_list[i]['kategori'], expected_list[i].kategori)
             self.assertEqual(fetched_list[i]['nama'], expected_list[i].nama)
 
+    def test_list_pasien_with_search_parameter(self):
+        pasien_list = MahasiswaFactory.create_batch(15, golongan_darah='O')
+        noise = MahasiswaFactory.create_batch(10, golongan_darah='AB')
+
+        response = Request().get('/main/pasien/?golongan_darah=O', **self.auth_headers)
+        self.assertEqual(response.status_code, 200)
+
+        search_dict = {'golongan_darah' : 'O'}
+        expected_list = GetModelList(Pasien, search_dict=search_dict).call()
+        fetched_list = json.loads(response.content)['pasien']
+
+        for i in range(len(expected_list)):
+            self.assertEqual(fetched_list[i]['id'], expected_list[i].id)
+            self.assertEqual(fetched_list[i]['no_pasien'], expected_list[i].no_pasien)
+            self.assertEqual(fetched_list[i]['kategori'], expected_list[i].kategori)
+            self.assertEqual(fetched_list[i]['nama'], expected_list[i].nama)
         
 
 

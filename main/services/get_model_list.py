@@ -1,5 +1,5 @@
 class GetModelList():
-    def __init__(self, model, page=1, entry_per_page=10, sort_dir='asc', sort_field='id', search_dict={}):
+    def __init__(self, model, page=1, entry_per_page=10, sort_dir='desc', sort_field='id', search_dict={}):
         self.page = page
         self.entry_per_page = entry_per_page
         self.sort_dir = sort_dir
