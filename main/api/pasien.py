@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpRequest, Http404, JsonResponse
 from django.db import IntegrityError
 from django.forms.models import model_to_dict
 from django.utils.datastructures import MultiValueDictKeyError
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 from .helper import *
 from .auth_decorators import allow_only_roles
 from ..models import Pasien, Mahasiswa, Karyawan_BMG, Karyawan_ITB, Keluarga_Karyawan_ITB
@@ -11,7 +11,8 @@ from ..models import Mitra_Kerja_Sama, Umum
 import json
 import traceback
 import pry
-from main.services.pasien import PasienCreator
+from main.services.pasien import PasienCreator, PasienFetcher
+from main.services import GetModelList
 
 @require_POST
 @allow_only_roles(['loket', 'admin'])
@@ -27,65 +28,41 @@ def pasien_insert(request):
         response = {'response':'Exception '+e.__str__()}
         return JsonResponse(response, status=400)
 
-def insert_pasien(post_form):
-    new_pasien = construct_pasien_from_post_form(post_form)
-    new_pasien.save()
-    return new_pasien
-
-def construct_pasien_from_post_form(post_form):
-    kategori = post_form['kategori']
-    
-    return {
-        'Mahasiswa': Mahasiswa,
-        'Karyawan BMG': Karyawan_BMG,
-        'Karyawan ITB': Karyawan_ITB,
-        'Keluarga Karyawan': Keluarga_Karyawan_ITB,
-        'Mitra Kerja Sama': Mitra_Kerja_Sama,
-        'Umum': Umum
-    }.get(kategori)(**post_form)
-
+@require_GET
 @allow_only_roles(['loket', 'admin', 'apotek'])
 def pasien_get(request, no_pasien):
-    if(request.method == 'GET'):
-        try :
-            pasien = get_pasien(no_pasien)
-            pasien = model_to_dict(pasien)
-            return JsonResponse({'pasien':pasien,'response':'success'}, status=200)
-        except Exception as e:
-            response = {'response':'Exception '+e.__str__()}
-            return JsonResponse(response, status=400)
-    else:
-        return defaults.bad_request(request, request.path_info)
+    try :
+        pasien = PasienFetcher(no_pasien).fetch()
+        pasien = model_to_dict(pasien)
+        return JsonResponse({'pasien':pasien,'response':'success'}, status=200)
+    except Exception as e:
+        response = {'response':'Exception '+e.__str__()}
+        return JsonResponse(response, status=400)
 
-def get_pasien(no_pasien):
-    pasien = get_pasien_with_category(no_pasien)
-    return pasien
-
-def get_pasien_with_category(no_pasien):
-    pasien = Pasien.objects.get(no_pasien=no_pasien)
-    kategori = pasien.kategori
-
-    return {
-        'Mahasiswa': Mahasiswa,
-        'Karyawan BMG': Karyawan_BMG,
-        'Karyawan ITB': Karyawan_ITB,
-        'Keluarga Karyawan': Keluarga_Karyawan_ITB,
-        'Mitra Kerja Sama': Mitra_Kerja_Sama,
-        'Umum': Umum
-    }.get(kategori).objects.get(no_pasien=pasien.no_pasien)
-
+@require_GET
 @allow_only_roles(['loket', 'admin', 'apotek'])
 def pasien_get_list(request):
-    if(request.method == 'GET'):
-        try :
-            pasien_list = get_pasien_list(request.GET.dict())
-            pasien_list = transform_pasien_list_to_dict_list(pasien_list)
-            return JsonResponse({'pasien':pasien_list,'response':'success','code':200})
-        except Exception as e:
-            response = {'response':'Exception '+e.__str__()}
-            return JsonResponse(response, status=400)
-    else:
-        return defaults.bad_request(request, request.path_info)
+    try :
+        list_params = get_list_params(request.GET.dict())
+        pasien_list = GetModelList(Pasien, **list_params).call()
+        pasien_list = list(map(lambda pasien: pasien.serialize(), pasien_list))
+        return JsonResponse({'pasien':pasien_list,'response':'success','code':200})
+    except Exception as e:
+        response = {'response':'Exception '+e.__str__()}
+        return JsonResponse(response, status=400)
+
+def get_list_params(request):
+    result_params = {}
+    pagination_params = ['page', 'entry_per_page', 'kategori', 'sort_field', 'sort_dir']
+
+    for param in pagination_params:
+        if param in request:
+            result_params[param] = request[param]
+            del request[param]
+
+    result_params['search_dict'] = request
+
+    return result_params
 
 def get_pasien_list(get_form):
     required_information = ['page', 'entry_per_page', 'kategori', 'sort_field', 'sort_dir']

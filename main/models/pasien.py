@@ -27,26 +27,18 @@ class Pasien(models.Model):
     alamat = models.CharField(max_length=_long_length, null=True, blank=True)
     kota = models.CharField(max_length=_short_length, null=True, blank=True)
 
-    # def save(self):
-    #     super().save()
-    #     self.no_pasien = self.new_id()
-    #     super().save()
-    #     if(not self.subsidi_initiated):
-    #         self.init_subsidi()
-    #         self.subsidi_initiated = True
-    #         super().save()
-
     @classmethod
     def new_id(cls):
         return 'P-' + Faker().uuid4(cast_to=str)[:8]
 
-    # def init_subsidi(self):
-    #     Subsidi_Kunjungan.create_pasien_subsidi_from_parameter(self)
-    #     Subsidi_Obat.create_pasien_subsidi_from_parameter(self)
-    #     Subsidi_Tindakan.create_pasien_subsidi_from_parameter(self)
-
     def __str__(self):
         return self.nama
+
+    def serialize(self):
+        pasien = model_to_dict(self)
+        pasien['tanggal_lahir'] = str(self.tanggal_lahir)
+
+        return pasien
 
 class Mahasiswa(Pasien):
     nim = models.CharField(max_length=_short_length, unique=True)

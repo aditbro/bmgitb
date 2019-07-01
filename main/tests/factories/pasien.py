@@ -10,30 +10,85 @@ from main.models import (
     Mitra_Kerja_Sama
 )
 
-from faker import Faker
+from faker import Factory
 from random import choice
 from datetime import datetime, date
-from factory.django import DjangoModelFactory
+import factory
 
-class PasienFactory(DjangoModelFactory):
+faker = Factory.create()
+func = factory.LazyFunction
+fatr = factory.LazyAttribute
+
+class PasienFactory(factory.django.DjangoModelFactory):
     '''Generate random pasien data'''
     class Meta:
         model = Pasien
 
-    no_pasien = Pasien.new_id()
-    kategori = choice(['Umum', 'Mahasiswa', 'Karyawan BMG', 'Mitra Kerja Sama'])
-    nama = Faker().name()
-    tipe_kartu_identitas = choice(['KTP', 'KTM', 'SIM'])
-    nomor_kartu_identitas = Faker().pystr()
-    tempat_lahir = Faker().pystr()
-    tanggal_lahir = Faker().date_object(end_datetime=date.today())
-    gender = choice(['laki-laki', 'perempuan'])
-    waktu_registrasi = datetime.now()
-    email = Faker().email()
-    no_telepon = Faker().msisdn()
-    no_hp = Faker().msisdn()
-    golongan_darah = choice(['A','B','AB','O'])
-    rhesus = choice(['+','-'])
-    catatan = Faker().paragraph()
-    alamat = Faker().address()
-    kota = Faker().city()
+    no_pasien = func(Pasien.new_id)
+    nama = func(faker.name)
+    tipe_kartu_identitas = fatr(lambda obj: choice(['KTP', 'KTM', 'SIM']))
+    nomor_kartu_identitas = func(faker.pystr)
+    tempat_lahir = func(faker.pystr)
+    tanggal_lahir = fatr(lambda obj: faker.date_object(end_datetime=date.today()))
+    gender = fatr(lambda obj: choice(['laki-laki', 'perempuan']))
+    waktu_registrasi = func(datetime.now)
+    email = func(faker.email)
+    no_telepon = func(faker.msisdn)
+    no_hp = func(faker.msisdn)
+    golongan_darah = fatr(lambda obj: choice(['A','B','AB','O']))
+    rhesus = fatr(lambda obj: choice(['+','-']))
+    catatan = func(faker.paragraph)
+    alamat = func(faker.address)
+    kota = func(faker.city)
+
+class MahasiswaFactory(PasienFactory):
+    '''Generate random mahasiswa data'''
+    class Meta:
+        model = Mahasiswa
+
+    kategori = 'Mahasiswa'
+    nim = func(faker.itin)
+    strata = fatr(lambda obj: choice(['S1', 'S2', 'S3']))
+    internasional = fatr(lambda obj: choice(['true', 'false']))
+    tpb = fatr(lambda obj: choice(['true', 'false']))
+    program_studi = func(faker.word)
+    fakultas = func(faker.word)
+
+class KaryawanBMGFactory(PasienFactory):
+    '''Generate random karyawan bmg data'''
+    class Meta:
+        model = Karyawan_BMG
+
+    kategori = 'Karyawan BMG'
+    nip = func(faker.itin)
+
+class KaryawanITBFactory(PasienFactory):
+    '''Generate random karyawan itb data'''
+    class Meta:
+        model = Karyawan_ITB
+
+    kategori = 'Karyawan ITB'
+    nip = func(faker.itin)
+
+class KeluargaKaryawanITBFactory(PasienFactory):
+    '''Generate random keluarga karyawan'''
+    class Meta:
+        model = Keluarga_Karyawan_ITB
+
+    kategori = 'Keluarga Karyawan'
+    karyawan = factory.SubFactory(KaryawanITBFactory)
+
+class UmumFactory(PasienFactory):
+    '''Generate random keluarga karyawan'''
+    class Meta:
+        model = Umum
+
+    kategori = 'Umum'
+
+class MitraKerjaSamaFactory(PasienFactory):
+    '''Generate random keluarga karyawan'''
+    class Meta:
+        model = Mitra_Kerja_Sama
+
+    organisasi = func(faker.name)
+    
