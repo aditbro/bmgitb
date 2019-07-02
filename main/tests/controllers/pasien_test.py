@@ -31,7 +31,7 @@ class PasienControllerTestCase(TestCase):
         data = model_to_dict(new_pasien)
 
         response = Request().post(
-            '/main/pasien/insert/', data, **self.auth_headers, content_type='application/json'
+            '/main/pasien/', data, **self.auth_headers, content_type='application/json'
         )
         self.assertEqual(response.status_code, 200)
         
@@ -92,6 +92,26 @@ class PasienControllerTestCase(TestCase):
             self.assertEqual(fetched_list[i]['no_pasien'], expected_list[i].no_pasien)
             self.assertEqual(fetched_list[i]['kategori'], expected_list[i].kategori)
             self.assertEqual(fetched_list[i]['nama'], expected_list[i].nama)
+
+    def test_pasien_update(self):
+        pasien = MahasiswaFactory.create()
+        update_params = {
+            'no_telepon' : '123',
+            'no_hp' : '456',
+            'alamat' : 'jalan ganesha',
+            'kota' : 'Surakarta'
+        }
+        url = '/main/pasien/{}/'.format(pasien.no_pasien)
+
+        response = Request().patch(url, data=json.dumps(update_params), **self.auth_headers)
+        self.assertEqual(response.status_code, 200)
+
+        pasien.refresh_from_db()
+        self.assertEqual(pasien.no_telepon, update_params['no_telepon'])
+        self.assertEqual(pasien.no_hp, update_params['no_hp'])
+        self.assertEqual(pasien.alamat, update_params['alamat'])
+        self.assertEqual(pasien.kota, update_params['kota'])
+        
         
 
 

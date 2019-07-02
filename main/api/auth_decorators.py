@@ -4,17 +4,18 @@ from django.db import IntegrityError
 from django.db import models
 from django.forms.models import model_to_dict
 import json
+import pry
 
 #for decorator with parameter
-def parameterized(dec):
+def parameterized(dec, *o_args, **o_kwargs):
     def layer(*args, **kwargs):
         def repl(f):
             return dec(f, *args, **kwargs)
         return repl
     return layer
 
-def require_token(func):
-    def wrapper(request, *args, **kwargs):
+def require_token(func, *o_args, **o_kwargs):
+    def wrapper(self, request, *args, **kwargs):
         try:
             token = request.META['HTTP_ACCESS_TOKEN']
             user = Client.authenticate_access_token(token)
@@ -22,22 +23,22 @@ def require_token(func):
             return func(request, *args, **kwargs)
         except Exception as e :
             response = {'response' : 'Exception ' + e.__str__()}
-            return JsonResponse(response, status = 403)
+            return JsonResponse(response, status=403)
     
     return wrapper
 
 @parameterized
-def allow_only_roles(func, roles):
-    def wrapper(request, *args, **kwargs):
+def allow_only_roles(func, roles, *o_args, **o_kwargs):
+    def wrapper(self, request, *args, **kwargs):
         try:
             token = request.META['HTTP_ACCESS_TOKEN']
             user = Client.authenticate_access_token(token)
             check_if_user_has_role(user, roles)
 
-            return func(request, *args, **kwargs)
+            return func(self, request, *args, **kwargs)
         except Exception as e :
             response = {'response' : 'Exception ' + e.__str__()}
-            return JsonResponse(response, status = 403)
+            return JsonResponse(response, status=403)
 
     return wrapper
 
