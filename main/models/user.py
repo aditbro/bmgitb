@@ -53,8 +53,8 @@ class Client(User) :
     @classmethod
     def create_client(cls, username, password, bagian):
         pseudo_email = username + '@bmg.itb.ac.id'
-        client = Client.objects.create_user(username, pseudo_email, password)
-        client.bagian = bagian
+        client = Client(username=username, password=password, bagian=bagian)
+        client.save()
 
         return client
 

@@ -29,7 +29,8 @@ function verify_login(xhttp) {
 }
 
 function saveAccessTokenToCookie(token) {
-    console.log(token)
+    Cookies.set('access_token', token)
+    window.location.href = '/main/'
 }
 
 function moveToMainPage() {

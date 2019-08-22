@@ -22,7 +22,6 @@ def user_insert(request):
 def insert_user(post_form):
     if('username' in post_form and 'password' in post_form):
         client = Client.create_client(post_form['username'], post_form['password'], post_form['bagian'])
-        client.save()
     else:
         raise Exception("parameter tidak lengkap")
 
@@ -30,7 +29,7 @@ def user_authenticate(request):
     if(request.method == 'POST'):
         try :
             user = authenticate_user(json.loads(request.body))
-            return JsonResponse({'Access-Token' : user.access_token}, status = 200)
+            return JsonResponse({'access_token' : user.access_token}, status = 200)
         except Exception as e:
             traceback.print_exc()
             response = {'response' : 'Exception '+e.__str__()}
