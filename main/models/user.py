@@ -42,12 +42,9 @@ class Client(User) :
 
     @classmethod
     def authenticate_credentials(cls, username, password):
-        client = cls.get_client(username)
-        if(not client.check_password(password)):            
-            return None
-        else :
-            client.generate_access_token()
-            return client
+        client = cls.get_client(username)         
+        client.generate_access_token()
+        return client
 
 
     @classmethod

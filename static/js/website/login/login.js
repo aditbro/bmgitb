@@ -20,7 +20,7 @@ function getLoginData() {
 
 function verify_login(xhttp) {
     if(xhttp.readyState == 4 && xhttp.status == 200) {
-        token = JSON.parse(xhttp.responseText)["Access-Token"]
+        token = JSON.parse(xhttp.responseText)["access_token"]
         saveAccessTokenToCookie(token)
         moveToMainPage()
     } else if(xhttp.readyState == 4){
@@ -30,9 +30,9 @@ function verify_login(xhttp) {
 
 function saveAccessTokenToCookie(token) {
     Cookies.set('access_token', token)
-    window.location.href = '/main/'
+    console.log(token)
 }
 
 function moveToMainPage() {
-    
+    window.location.href = '/'
 }

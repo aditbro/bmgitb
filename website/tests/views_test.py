@@ -9,7 +9,7 @@ class IndexTest(TestCase):
     def test_when_access_token_exist_and_valid(self):
         client = Client.create_client('test', 'test', 'loket')
         access_token = client.generate_access_token()
-        self.client.cookies['HTTP_ACCESS_TOKEN'] = access_token
+        self.client.cookies['access_token'] = access_token
 
         response = self.client.get(self.url)
 
@@ -17,7 +17,7 @@ class IndexTest(TestCase):
         self.assertTemplateUsed(response, 'website/mainpage.html')
 
     def test_when_access_token_exist_but_invalid(self):
-        self.client.cookies['HTTP_ACCESS_TOKEN'] = 'arskadmskamdsa'
+        self.client.cookies['access_token'] = 'arskadmskamdsa'
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, 200)
