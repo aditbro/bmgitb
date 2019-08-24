@@ -1,0 +1,13 @@
+thead tr th {
+    position: sticky;
+    top: 0;
+    background-color: white;
+}
+
+.input-field .prefix.right {
+    right: 0;
+}
+
+table.highlight tbody tr:hover {
+    background-color: rgba(255, 0, 85, 0.1);
+}
