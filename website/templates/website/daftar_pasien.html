@@ -16,68 +16,8 @@
 			</div>
     </div>
 		<div class="row">
-      <div id="data-table" style="overflow: auto; max-height: 65vh">
-        <table class="highlight">
-          <thead>
-            <tr>
-                <th>Name</th>
-                <th>Item Name</th>
-                <th>Item Price</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr>
-              <td>Alvin</td>
-              <td>Eclair</td>
-              <td>$0.87</td>
-            </tr>
-            <tr>
-              <td>Alan</td>
-              <td>Jellybean</td>
-              <td>$3.76</td>
-            </tr>
-            <tr>
-              <td>Jonathan</td>
-              <td>Lollipop</td>
-              <td>$7.00</td>
-            </tr>
-            <tr>
-              <td>Jonathan</td>
-              <td>Lollipop</td>
-              <td>$7.00</td>
-            </tr>
-            <tr>
-              <td>Jonathan</td>
-              <td>Lollipop</td>
-              <td>$7.00</td>
-            </tr>
-            <tr>
-              <td>Jonathan</td>
-              <td>Lollipop</td>
-              <td>$7.00</td>
-            </tr>
-            <tr>
-              <td>Jonathan</td>
-              <td>Lollipop</td>
-              <td>$7.00</td>
-            </tr>
-            <tr>
-              <td>Jonathan</td>
-              <td>Lollipop</td>
-              <td>$7.00</td>
-            </tr>
-            <tr>
-              <td>Jonathan</td>
-              <td>Lollipop</td>
-              <td>$7.00</td>
-            </tr>
-            <tr>
-              <td>Jonathan</td>
-              <td>Lollipop</td>
-              <td>$7.00</td>
-            </tr>
-          </tbody>
+      <div style="overflow: auto; max-height: 65vh">
+        <table class="highlight" id="data-table">
         </table>
       </div>
       <ul class="pagination" style="text-align: center">
@@ -94,3 +34,6 @@
   {% include 'website/common_script.html' %}
 <body>
 <html>
+<script src="{% static 'js/website/table_builder.js' %}"></script>
+<script src="{% static 'js/website/pasien/daftar.js' %}"></script>
+<script src="{% static 'js/website/pasien/pasien.js' %}"></script>

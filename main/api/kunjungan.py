@@ -74,10 +74,10 @@ def kunjungan_get_list(request):
         return defaults.bad_request(request, request.path_info)
 
 def get_kunjungan_list(get_form):
-    required_information = ['page', 'entry_per_page', 'sort_field', 'sort_dir']
+    required_information = ['page', 'limit', 'sort_field', 'sort_dir']
     default_value = {
         'page' : 1,
-        'entry_per_page' : 10,
+        'limit' : 10,
         'sort_field' : 'waktu_kunjungan',
         'sort_dir' : 'ascending'
     }
@@ -90,7 +90,7 @@ def get_kunjungan_list(get_form):
             base_info_form[info] = get_form[info]
             del get_form[info]
 
-    start, end = get_entry_range_from_page(base_info_form['page'], base_info_form['entry_per_page'])
+    start, end = get_entry_range_from_page(base_info_form['page'], base_info_form['limit'])
     sort_parameter = get_sort_parameter(base_info_form['sort_field'], base_info_form['sort_dir'])
 
     kunjungan_list = Kunjungan.objects.filter(**get_form).order_by(sort_parameter)[start:end]

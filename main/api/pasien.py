@@ -49,7 +49,7 @@ class PasienController(BaseController):
 
     def get_list_params(self, request):
         result_params = {}
-        pagination_params = ['page', 'entry_per_page', 'kategori', 'sort_field', 'sort_dir']
+        pagination_params = ['page', 'limit', 'kategori', 'sort_field', 'sort_dir']
 
         for param in pagination_params:
             if param in request:

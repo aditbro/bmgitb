@@ -3,6 +3,7 @@ from django.forms.models import model_to_dict
 from .subsidi import Subsidi_Kunjungan, Subsidi_Obat, Subsidi_Tindakan
 from datetime import datetime
 from faker import Faker
+import pry
 
 _short_length = 100
 _medium_length = 255
@@ -37,6 +38,7 @@ class Pasien(models.Model):
     def serialize(self):
         pasien = model_to_dict(self)
         pasien['tanggal_lahir'] = str(self.tanggal_lahir)
+        pasien['waktu_registrasi'] = str(self.waktu_registrasi.strftime("%d %b %Y %H:%M"))
 
         return pasien
 

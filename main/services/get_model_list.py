@@ -1,10 +1,10 @@
 class GetModelList():
-    def __init__(self, model, page=1, entry_per_page=10, sort_dir='desc', sort_field='id', search_dict={}):
-        self.page = page
-        self.entry_per_page = entry_per_page
+    def __init__(self, model, page=1, limit=10, sort_dir='desc', sort_field='id', search_dict={}):
+        self.page = int(page)
+        self.limit = int(limit)
         self.sort_dir = sort_dir
         self.sort_field = sort_field
-        self.search_dict=search_dict
+        self.search_dict= search_dict
         self.model = model
 
     def call(self):
@@ -20,5 +20,5 @@ class GetModelList():
         return param + self.sort_field
 
     def calculate_limit_offset(self):
-        self.start_index = (self.page - 1) * self.entry_per_page
-        self.end_index = self.start_index + self.entry_per_page
+        self.start_index = (self.page - 1) * self.limit
+        self.end_index = self.start_index + self.limit

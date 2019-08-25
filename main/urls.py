@@ -7,8 +7,8 @@ app_name = 'main'
 urlpatterns = [
     path('', views.index, name="login page"),
 
-    path('pasien/', PasienController().call, name='insert pasien'),
-    path('pasien/<str:no_pasien>/', PasienController().call, name='get pasien'),
+    path('pasien/', PasienController().call),
+    path('pasien/<str:no_pasien>/', PasienController().call),
 
     path('klinik/kunjungan/insert/', api.kunjungan.kunjungan_insert, name='insert kunjungan'),
     path('klinik/kunjungan/update/', api.kunjungan.kunjungan_update, name='insert kunjungan'),
