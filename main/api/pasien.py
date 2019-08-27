@@ -42,7 +42,14 @@ class PasienController(BaseController):
             list_params = self.get_list_params(request.GET.dict())
             pasien_list = GetModelList(Pasien, **list_params).call()
             pasien_list = list(map(lambda pasien: pasien.serialize(), pasien_list))
-            return JsonResponse({'pasien':pasien_list,'response':'success','code':200})
+            pasien_count = Pasien.objects.count()
+
+            data = { 
+                'pasien': pasien_list,
+                'response': 'success'
+            }
+            
+            return JsonResponse(data, status=200)
         except Exception as e:
             response = {'response':'Exception '+e.__str__()}
             return JsonResponse(response, status=400)

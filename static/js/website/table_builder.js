@@ -1,4 +1,5 @@
-function build_table(table, object_list) {
+function build_table(object_list) {
+    table = document.createElement("table")
     table_header = build_table_header(object_list[0])
     table_body = build_table_body(object_list)
 
