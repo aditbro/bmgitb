@@ -1,17 +1,19 @@
 $(document).ready(function() {
-    fetch_pasien_data();
+    fetch_resource_data();
 })
 
 document.getElementById("prev-page-btn").addEventListener("click", function() {
     page_number = parseInt(document.getElementById("page-number").innerHTML) - 1
+    search_text = document.getElementById("search-bar").value
     if(page_number > 0) {
-        fetch_pasien_data(page_number)
+        fetch_resource_data(page_number, 10, search_text)
     }
 })
 
 document.getElementById("next-page-btn").addEventListener("click", function() {
     page_number = parseInt(document.getElementById("page-number").innerHTML) + 1
-    fetch_pasien_data(page_number)
+    search_text = document.getElementById("search-bar").value
+    fetch_resource_data(page_number, 10, search_text)
 })
 
 document.getElementById("search-bar").addEventListener("keyup", function(event) {
@@ -19,15 +21,15 @@ document.getElementById("search-bar").addEventListener("keyup", function(event) 
     if (event.keyCode === enterKeyCode) {
         event.preventDefault()
         search_text = document.getElementById("search-bar").value
-        fetch_pasien_data(page = 1, limit = 10, search_text = search_text)
+        fetch_resource_data(page = 1, limit = 10, search_text = search_text)
     }
 })
 
-function fetch_pasien_data(page = 1, limit = 10, search_text = undefined) {
-    data = { "page": page, "limit": limit,  ...Pasien.get_search_dict(search_text)}
+function fetch_resource_data(page = 1, limit = 10, search_text = undefined) {
+    data = { "page": page, "limit": limit,  ...Resource.get_search_dict(search_text)}
     get_query = new URLSearchParams(data).toString()
-    url = Pasien.url + "?" + get_query
-    send_get_request(url, fetch_pasien_data_callback)
+    url = Resource.url + "?" + get_query
+    send_get_request(url, fetch_resource_data_callback)
     update_page_number(page)
 }
 
@@ -45,23 +47,27 @@ function update_page_number(page) {
     }
 }
 
-function build_pasien_list(json_list) {
-    pasien_list = []
+function build_resource_list(json_list) {
+    resource_list = []
     
     json_list.forEach(json => {
-        pasien_list.push(new Pasien(json))
+        resource_list.push(new Resource(json))
     })
 
-    return pasien_list
+    return resource_list
 }
 
-function fetch_pasien_data_callback(xhttp) {
+function fetch_resource_data_callback(xhttp) {
     if(xhttp.readyState == 4 && xhttp.status == 200) {
         response_data = JSON.parse(xhttp.responseText)
-        pasien_list = build_pasien_list(response_data["pasien"])
+        resource_list = build_resource_list(response_data[Resource.name])
+        if(resource_list.length == 0) {
+            alert("Data tidak ditemukan")
+            return
+        }
 
         table_div = document.getElementById("data-table")
-        new_table = build_table(pasien_list)
+        new_table = build_table(resource_list)
         table_div.removeChild(table_div.childNodes[0])
         table_div.appendChild(new_table)
     } else if(xhttp.readyState == 4){

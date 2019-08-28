@@ -1,4 +1,5 @@
 class Pasien {
+    static name = "pasien"
     static table_columns = ['no_pasien', 'kategori', 'nama', 'nomor_kartu_identitas', 'waktu_registrasi']
     static search_columns = ['no_pasien', 'kategori', 'nama', 'nomor_kartu_identitas']
     static url = "/main/pasien/"

@@ -15,7 +15,7 @@ function build_table_header(object) {
 
     object.constructor.table_columns.forEach(column => {
         th = document.createElement("th")
-        th.innerHTML = column
+        th.innerHTML = column.replace(/_/g, " ")
         tr.appendChild(th)
     })
 
