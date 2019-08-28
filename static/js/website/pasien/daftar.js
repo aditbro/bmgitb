@@ -14,8 +14,17 @@ document.getElementById("next-page-btn").addEventListener("click", function() {
     fetch_pasien_data(page_number)
 })
 
-function fetch_pasien_data(page = 1, limit = 10) {
-    data = { "page": page, "limit": limit,  ...Pasien.get_search_dict()}
+document.getElementById("search-bar").addEventListener("keyup", function(event) {
+    enterKeyCode = 13
+    if (event.keyCode === enterKeyCode) {
+        event.preventDefault()
+        search_text = document.getElementById("search-bar").value
+        fetch_pasien_data(page = 1, limit = 10, search_text = search_text)
+    }
+})
+
+function fetch_pasien_data(page = 1, limit = 10, search_text = undefined) {
+    data = { "page": page, "limit": limit,  ...Pasien.get_search_dict(search_text)}
     get_query = new URLSearchParams(data).toString()
     url = Pasien.url + "?" + get_query
     send_get_request(url, fetch_pasien_data_callback)

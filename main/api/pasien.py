@@ -46,7 +46,8 @@ class PasienController(BaseController):
 
             data = { 
                 'pasien': pasien_list,
-                'response': 'success'
+                'response': 'success',
+                'pasien_count' : pasien_count
             }
             
             return JsonResponse(data, status=200)
@@ -56,7 +57,7 @@ class PasienController(BaseController):
 
     def get_list_params(self, request):
         result_params = {}
-        pagination_params = ['page', 'limit', 'kategori', 'sort_field', 'sort_dir']
+        pagination_params = ['page', 'limit', 'sort_field', 'sort_dir']
 
         for param in pagination_params:
             if param in request:
