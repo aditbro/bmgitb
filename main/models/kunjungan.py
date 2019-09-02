@@ -3,6 +3,8 @@ from .pasien import Pasien
 from .klinik import Klinik, Dokter, Tindakan, Diagnosis
 from .subsidi import Subsidi_Tindakan
 from datetime import datetime
+from django.forms.models import model_to_dict
+from faker import Faker
 
 _short_length = 100
 _medium_length = 255
@@ -18,40 +20,33 @@ class Kunjungan(models.Model):
     cash = models.IntegerField()
     koreksi = models.ForeignKey('Kunjungan', on_delete=models.SET_NULL, null=True, blank=True)
     asal = models.CharField(max_length=_short_length, null=True, blank=True)
-    waktu_kunjungan = models.DateTimeField(blank=True)
+    waktu_kunjungan = models.DateTimeField(auto_now_add=True, blank=True)
     is_valid = models.BooleanField(blank=True, default=True)
 
-    def __init__(self, *args, **kwargs):
-        required_column = ['pasien', 'klinik', 'dokter']
-        construction_parameter = {}
+    @classmethod
+    def create(cls, **parameters):
+        parameters['kode'] = cls.new_id()
+        parameters['pasien'] = Pasien.objects.get(no_pasien=parameters['pasien'])
+        parameters['klinik'] = Klinik.objects.get(kode=parameters['klinik'])
+        parameters['dokter'] = Dokter.objects.get(kode=parameters['dokter'])
+        parameters['cash'] = parameters['tarif']
+        parameters['klaim'] = 0
 
-        for key,value in kwargs.items() :
-            construction_parameter[key] = value
-            if key in required_column :
-                required_column.remove(key)
+        return cls.objects.create(**parameters)
 
-        if(not args and kwargs):        
-            if required_column :
-                raise Exception("missing parameter(s) " + ", ".join(required_column))
+    @classmethod
+    def new_id(cls):
+        return 'Ku-' + Faker().uuid4(cast_to=str)[:8]
 
-            construction_parameter['pasien'] = Pasien.objects.get(no_pasien=kwargs['pasien'])
-            construction_parameter['klinik'] = Klinik.objects.get(kode=kwargs['klinik'])
-            construction_parameter['dokter'] = Dokter.objects.get(kode=kwargs['dokter'])
-            construction_parameter['tarif'] = Parameter_Tarif_Kunjungan.objects.get(kategori_pasien=construction_parameter['pasien'].kategori).tarif
-            construction_parameter['cash'] = construction_parameter['tarif']
-            construction_parameter['klaim'] = 0
+    def serialize(self):
+        kunjungan = model_to_dict(self)
+        kunjungan['pasien'] = self.pasien.serialize()
+        kunjungan['klinik'] = self.klinik.serialize()
+        kunjungan['dokter'] = self.dokter.serialize()
+        kunjungan['waktu_kunjungan'] = str(self.waktu_kunjungan.strftime("%d %b %Y %H:%M"))
+        
 
-        super().__init__(*args, **construction_parameter)
-
-    def save(self):
-        self.save_waktu_kunjungan()
-        super().save()
-        self.insert_kode_kunjungan()
-        super().save()
-
-    def insert_kode_kunjungan(self):
-        if(not self.kode):
-            self.kode = 'K-' + str(self.id)
+        return kunjungan
 
     def save_waktu_kunjungan(self):
         if(not self.waktu_kunjungan):

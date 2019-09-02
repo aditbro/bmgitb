@@ -9,7 +9,7 @@ import json
 import traceback
 import pry
 from main.services.pasien import PasienCreator, PasienFetcher
-from main.services import GetModelList
+from main.services import GetModelList, get_list_params
 from .base_controller import BaseController
 
 class PasienController(BaseController):
@@ -39,7 +39,7 @@ class PasienController(BaseController):
     @allow_only_roles(['loket', 'admin', 'apotek'])
     def index(self, request):
         try :
-            list_params = self.get_list_params(request.GET.dict())
+            list_params = get_list_params(request.GET.dict())
             pasien_list = GetModelList(Pasien, **list_params).call()
             pasien_list = list(map(lambda pasien: pasien.serialize(), pasien_list))
             pasien_count = Pasien.objects.count()
@@ -54,19 +54,6 @@ class PasienController(BaseController):
         except Exception as e:
             response = {'response':'Exception '+e.__str__()}
             return JsonResponse(response, status=400)
-
-    def get_list_params(self, request):
-        result_params = {}
-        pagination_params = ['page', 'limit', 'sort_field', 'sort_dir']
-
-        for param in pagination_params:
-            if param in request:
-                result_params[param] = request[param]
-                del request[param]
-
-        result_params['search_dict'] = request
-
-        return result_params
 
     @allow_only_roles(['loket', 'admin', 'apotek'])
     def update(self, request, no_pasien):

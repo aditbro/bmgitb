@@ -26,6 +26,7 @@ document.getElementById("search-bar").addEventListener("keyup", function(event) 
 })
 
 function fetch_resource_data(page = 1, limit = 10, search_text = undefined) {
+    console.log(Resource)
     data = { "page": page, "limit": limit,  ...Resource.get_search_dict(search_text)}
     get_query = new URLSearchParams(data).toString()
     url = Resource.url + "?" + get_query

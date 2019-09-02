@@ -41,7 +41,7 @@ class DaftarPasienTest(TestCase):
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'website/daftar_pasien.html')
+        self.assertTemplateUsed(response, 'website/common_daftar_page.html')
 
     def test_when_access_token_exist_but_unallowed_roles(self):
         client = Client.create_client('test', 'test', 'diagnosis')
@@ -50,11 +50,11 @@ class DaftarPasienTest(TestCase):
 
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 403)
         self.assertTemplateUsed(response, 'website/login.html')
 
     def test_when_access_token_does_not_exist(self):
         response = self.client.get(self.url)
 
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 403)
         self.assertTemplateUsed(response, 'website/login.html')

@@ -7,6 +7,7 @@ class Pasien {
     constructor(json_data) {
         this.data = json_data
         this.resource_url = "/main/pasien/" + json_data["no_pasien"] + "/"
+        this.data_page_url = "/pasien/" + json_data["no_pasien"] + "/"
     }
 
     static get_search_dict(search_text) {
@@ -14,7 +15,7 @@ class Pasien {
         
         var search_dict = {}
 
-        this.table_columns.forEach(function(column, index) {
+        this.search_columns.forEach(function(column, index) {
             search_dict[column] = search_text;
         })
 

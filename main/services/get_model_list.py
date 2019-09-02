@@ -33,3 +33,16 @@ class GetModelList():
             search_filter |= Q(**kwargs)
 
         return search_filter
+
+def get_list_params(params):
+        result_params = {}
+        pagination_params = ['page', 'limit', 'sort_field', 'sort_dir']
+
+        for param in pagination_params:
+            if param in params:
+                result_params[param] = params[param]
+                del params[param]
+
+        result_params['search_dict'] = params
+
+        return result_params

@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms.models import model_to_dict
 
 _short_length = 100
 _medium_length = 255
@@ -11,6 +12,9 @@ class Dokter(models.Model):
 
     def __str__(self):
         return self.nama + ', klinik ' + self.klinik.nama 
+    
+    def serialize(self):
+        return model_to_dict(self)
 
 class Klinik(models.Model):
     kode = models.CharField(max_length=_short_length, unique=True)
@@ -21,6 +25,9 @@ class Klinik(models.Model):
 
     def __str__(self):
         return self.nama
+
+    def serialize(self):
+        return model_to_dict(self)
 
 class Diagnosis(models.Model):
     nama = models.CharField(max_length=_medium_length)
