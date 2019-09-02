@@ -29,6 +29,7 @@ function build_table_body(object_list) {
 
     object_list.forEach(object => {
         tr = document.createElement("tr")
+        tr.onclick = function() { window.location.href = object.resource_url }
 
         object.constructor.table_columns.forEach(column => {
             td = document.createElement("td")
