@@ -30,7 +30,7 @@ class PasienController(BaseController):
     def get(self, request, no_pasien):
         try :
             pasien = PasienFetcher(no_pasien).fetch()
-            pasien = model_to_dict(pasien)
+            pasien = pasien.serialize()
             return JsonResponse({'pasien':pasien,'response':'success'}, status=200)
         except Exception as e:
             response = {'response':'Exception '+e.__str__()}

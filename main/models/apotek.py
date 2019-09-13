@@ -57,8 +57,6 @@ class PembelianOTC(models.Model):
         super().__init__(*args, **construction_parameter)
 
 class PembelianResep(models.Model):
-    pasien = models.ForeignKey('Pasien', on_delete=models.CASCADE)
-    kunjungan = models.ForeignKey('Kunjungan', on_delete=models.CASCADE)
     tarif = models.IntegerField()
     subsidi = models.IntegerField()
     bayar = models.IntegerField()
