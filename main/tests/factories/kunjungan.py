@@ -31,3 +31,4 @@ class KunjunganFactory(factory.django.DjangoModelFactory):
     koreksi = None
     asal = func(faker.address)
     is_valid = True
+    waktu_kunjungan = datetime.now()

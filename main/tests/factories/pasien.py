@@ -40,6 +40,7 @@ class PasienFactory(factory.django.DjangoModelFactory):
     catatan = func(faker.paragraph)
     alamat = func(faker.address)
     kota = func(faker.city)
+    kategori = 'Umum'
 
 class MahasiswaFactory(PasienFactory):
     '''Generate random mahasiswa data'''

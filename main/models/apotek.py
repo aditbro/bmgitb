@@ -19,7 +19,7 @@ class Obat(models.Model):
     def __str__(self):
         return self.nama
 
-class PembelianObatOTC(models.Model):
+class PembelianObatResep(models.Model):
     jumlah = models.IntegerField()
     obat = models.ForeignKey('Obat', on_delete=models.CASCADE)
     tarif = models.IntegerField()
@@ -27,7 +27,7 @@ class PembelianObatOTC(models.Model):
     def __str__(self):
         return self.obat.nama + ' ' + str(self.jumlah)
 
-class PembelianObatResep(models.Model):
+class PembelianObatOTC(models.Model):
     jumlah = models.IntegerField()
     obat = models.ForeignKey('Obat', on_delete=models.CASCADE)
     tarif = models.IntegerField()
@@ -38,7 +38,7 @@ class PembelianObatResep(models.Model):
 class PembelianOTC(models.Model):
     tarif = models.IntegerField()
     bayar = models.IntegerField()
-    obat = models.ManyToManyField('pembelianObatOTC')
+    obat = models.ManyToManyField(PembelianObatOTC)
     waktu_pembelian = models.DateTimeField(auto_now_add=True)
 
     def __init__(self, *args, **kwargs):
@@ -57,10 +57,11 @@ class PembelianOTC(models.Model):
         super().__init__(*args, **construction_parameter)
 
 class PembelianResep(models.Model):
+    pasien = models.ForeignKey('Pasien', on_delete=models.CASCADE)
     tarif = models.IntegerField()
     subsidi = models.IntegerField()
     bayar = models.IntegerField()
-    obat = models.ManyToManyField('PembelianObatResep', blank=True)
+    obat = models.ManyToManyField(PembelianObatResep, blank=True)
     waktu_pembelian = models.DateTimeField(auto_now_add=True)
 
     def __init__(self, *args, **kwargs):
