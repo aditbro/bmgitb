@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpRequest, Http404, JsonResponse
 from django.db import IntegrityError, transaction
 from django.forms.models import model_to_dict
 from main.api import BaseController
-from main.models import PembelianResep, PembelianObatResep, Obat, PembelianObatOTC, PembelianOTC
+from main.models import PembelianResep, PembelianObatResep, Obat, PembelianObatOTC, PembelianOTC, Pasien
 from main.services import GetModelList, get_list_params
 from .helper import *
 from .auth_decorators import *
@@ -17,6 +17,7 @@ class ApotekController(BaseController):
     def create(self, request):
         try:
             params = json.loads(request.body)
+            params['pasien'] = Pasien.objects.get(no_pasien=params['pasien'])
             list_obat = params.pop('obat')
             pembelian = params
 
@@ -64,8 +65,7 @@ class ApotekController(BaseController):
 
     def insert_obat(self, pembelian, list_obat):
         for data in list_obat :
-            data['obat'] = Obat.objects.get(kode=data['kode_obat'])
-            data.pop('kode_obat')
+            data['obat'] = Obat.objects.get(kode=data['obat'])
             pembelian_obat = self.PembelianObatClass(**data)
             pembelian_obat.save()
             pembelian.obat.add(pembelian_obat)

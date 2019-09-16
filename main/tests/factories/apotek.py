@@ -7,7 +7,7 @@ from main.models import (
     PembelianResep,
     Obat
 )
-
+from .pasien import PasienFactory
 from faker import Factory
 from random import choice
 from datetime import datetime, date
@@ -54,11 +54,20 @@ class PembelianResepFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = PembelianResep
 
-    obat = fatr(lambda obj: PembelianObatResepFactory.create_batch(random.randint(1, 5)))
-    tarif = fatr(lambda obj: sum([x.tarif for x in obj.obat]))
-    subsidi = fatr(lambda obj: obj.tarif - random.randint(0, obj.tarif))
-    bayar = fatr(lambda obj: obj.tarif)
+    tarif = 0
+    subsidi = 0
+    bayar = 0
+    pasien = factory.SubFactory(PasienFactory)
     waktu_pembelian = datetime.now()
+
+    @factory.post_generation
+    def generate(self, create, extracted, **kwargs):
+        obat = PembelianObatResepFactory.create_batch(random.randint(1, 5))
+        self.tarif = sum([x.tarif for x in obat])
+        self.subsidi = self.tarif - random.randint(0, self.tarif)
+        self.bayar = self.tarif - self.subsidi
+        for o in obat:
+            self.obat.add(o)
 
 class PembelianOTCFactory(factory.django.DjangoModelFactory):
     '''Generate random pembelian OTC data'''

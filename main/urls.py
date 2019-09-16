@@ -20,12 +20,12 @@ urlpatterns = [
     path('klinik/kunjungan/<str:kode_kunjungan>/', KunjunganController().call, name='get kunjungan'),
 
     path('klinik/tindakan/insert/', api.tindakan.tindakan_kunjungan_insert, name='insert tindakan kunjungan'),
-    path('klinik/tindakan/<str:kode_kunjungan>', api.tindakan.tindakan_kunjungan_get_list, name='insert tindakan kunjungan'),
+    path('klinik/tindakan/<str:kode_kunjungan>/', api.tindakan.tindakan_kunjungan_get_list, name='insert tindakan kunjungan'),
 
     path('apotek/resep/', ApotekResepController().call),
-    path('apotek/resep/<int:id>', ApotekResepController().call),
+    path('apotek/resep/<int:id>/', ApotekResepController().call),
     path('apotek/otc/', ApotekOTCController().call),
-    path('apotek/otc/<int:id>', ApotekOTCController().call),
+    path('apotek/otc/<int:id>/', ApotekOTCController().call),
 
     path('user/authenticate/', api.user_management.user_authenticate, name='login'),
     path('user/create/', api.user_management.user_insert, name='create user'),

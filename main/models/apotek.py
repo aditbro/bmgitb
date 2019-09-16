@@ -1,4 +1,5 @@
 from django.db import models
+from django.forms.models import model_to_dict
 from .pasien import Pasien
 from .subsidi import Subsidi_Obat
 from .kunjungan import Kunjungan
@@ -16,6 +17,9 @@ class Obat(models.Model):
     harga_otc = models.IntegerField()
     harga_resep = models.IntegerField()
 
+    def serialize(self):
+        return model_to_dict(self)
+
     def __str__(self):
         return self.nama
 
@@ -24,6 +28,12 @@ class PembelianObatResep(models.Model):
     obat = models.ForeignKey('Obat', on_delete=models.CASCADE)
     tarif = models.IntegerField()
 
+    def serialize(self):
+        data = model_to_dict(self)
+        data['obat'] = self.obat.serialize()
+        
+        return data
+
     def __str__(self):
         return self.obat.nama + ' ' + str(self.jumlah)
 
@@ -31,6 +41,12 @@ class PembelianObatOTC(models.Model):
     jumlah = models.IntegerField()
     obat = models.ForeignKey('Obat', on_delete=models.CASCADE)
     tarif = models.IntegerField()
+
+    def serialize(self):
+        data = model_to_dict(self)
+        data['obat'] = self.obat.serialize()
+        
+        return data
 
     def __str__(self):
         return self.obat.nama + ' ' + str(self.jumlah)
@@ -41,20 +57,19 @@ class PembelianOTC(models.Model):
     obat = models.ManyToManyField(PembelianObatOTC)
     waktu_pembelian = models.DateTimeField(auto_now_add=True)
 
-    def __init__(self, *args, **kwargs):
-        required_column = ['tarif', 'bayar']
-        construction_parameter = {}
+    def serialize(self):
+        data = model_to_dict(self)
+        data['waktu_pembelian'] = str(self.waktu_pembelian.strftime("%d %b %Y %H:%M"))
+        data['obat'] = self.serialize_obat()
 
-        for key,value in kwargs.items() :
-            if key in required_column :
-                construction_parameter[key] = value
-                required_column.remove(key)
+        return data
 
-        if(not args and kwargs):        
-            if required_column :
-                raise Exception("missing parameter(s) " + ", ".join(required_column))
-
-        super().__init__(*args, **construction_parameter)
+    def serialize_obat(self):
+        data = []
+        for o in self.obat.all():
+            data.append(o.serialize())
+        
+        return data
 
 class PembelianResep(models.Model):
     pasien = models.ForeignKey('Pasien', on_delete=models.CASCADE)
@@ -64,38 +79,20 @@ class PembelianResep(models.Model):
     obat = models.ManyToManyField(PembelianObatResep, blank=True)
     waktu_pembelian = models.DateTimeField(auto_now_add=True)
 
-    def __init__(self, *args, **kwargs):
-        required_column = ['pasien', 'kunjungan', 'tarif', 'subsidi', 'bayar']
-        construction_parameter = {}
+    def serialize(self):
+        data = model_to_dict(self)
+        data['waktu_pembelian'] = str(self.waktu_pembelian.strftime("%d %b %Y %H:%M"))
+        data['obat'] = self.serialize_obat()
+        data['pasien'] = self.pasien.serialize()
 
-        for key,value in kwargs.items() :
-            if key in required_column :
-                construction_parameter[key] = value
-                required_column.remove(key)
+        return data
 
-        if(not args and kwargs):        
-            if required_column :
-                raise Exception("missing parameter(s) " + ", ".join(required_column))
-
-            construction_parameter['kunjungan'] = Kunjungan.objects.filter(kode=kwargs['kunjungan']).order_by("waktu_kunjungan")[0]
-            construction_parameter['pasien'] = Pasien.objects.get(no_pasien=kwargs['pasien'])
-
-        super().__init__(*args, **construction_parameter)
-
-    def save(self):
-        self.reduce_subsidi_pasien()
-        super().save()
-
-    def reduce_subsidi_pasien(self):
-        subsidi_pasien = Subsidi_Obat.objects.filter(pasien__id=self.pasien.id)[0]
-        if(subsidi_pasien):
-            subsidi_pasien.sisa_subsidi_bulan_ini -= self.subsidi
-            subsidi_pasien.sisa_subsidi_tahunan -= self.subsidi
-
-            if(subsidi_pasien.sisa_subsidi_bulan_ini < 0 or subsidi_pasien.sisa_subsidi_tahunan < 0) :
-                raise Exception('Sisa subsidi pasien kurang untuk tindakan {}'.format(self.tindakan.nama))
-
-            subsidi_pasien.save()
+    def serialize_obat(self):
+        data = []
+        for o in self.obat.all():
+            data.append(o.serialize())
+        
+        return data
 
     def __str__(self):
         return self.pasien.nama + ' ' + str(self.waktu_pembelian)
