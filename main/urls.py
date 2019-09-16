@@ -19,9 +19,6 @@ urlpatterns = [
     path('klinik/kunjungan/', KunjunganController().call, name='insert kunjungan'),
     path('klinik/kunjungan/<str:kode_kunjungan>/', KunjunganController().call, name='get kunjungan'),
 
-    path('klinik/tindakan/insert/', api.tindakan.tindakan_kunjungan_insert, name='insert tindakan kunjungan'),
-    path('klinik/tindakan/<str:kode_kunjungan>/', api.tindakan.tindakan_kunjungan_get_list, name='insert tindakan kunjungan'),
-
     path('apotek/resep/', ApotekResepController().call),
     path('apotek/resep/<int:id>/', ApotekResepController().call),
     path('apotek/otc/', ApotekOTCController().call),

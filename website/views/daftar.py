@@ -13,3 +13,13 @@ def daftar_pasien(request):
 def daftar_kunjungan(request):
     context = {'Resource': 'Kunjungan'}
     return render(request, 'website/common_daftar_page.html', context)
+
+@allow_only_roles(['admin', 'apotek'])
+def daftar_pembelian_resep(request):
+    context = {'Resource': 'PembelianResep'}
+    return render(request, 'website/common_daftar_page.html', context)
+
+@allow_only_roles(['admin', 'apotek'])
+def daftar_pembelian_otc(request):
+    context = {'Resource': 'PembelianOTC'}
+    return render(request, 'website/common_daftar_page.html', context)

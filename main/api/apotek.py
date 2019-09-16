@@ -14,6 +14,7 @@ class ApotekController(BaseController):
     PembelianObatClass = None
     PembelianClass = None
 
+    @allow_only_roles(['apotek', 'admin'])
     def create(self, request):
         try:
             params = json.loads(request.body)

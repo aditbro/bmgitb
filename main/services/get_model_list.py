@@ -15,7 +15,7 @@ class GetModelList():
             self.build_search_filter()
         ).order_by(
             self.sort_param()
-        )[self.start_index:self.end_index]
+        ).distinct()[self.start_index:self.end_index]
 
     def sort_param(self):
         param = '-' if self.sort_dir == 'desc' else ''

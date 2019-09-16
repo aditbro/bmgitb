@@ -5,7 +5,6 @@ class Kunjungan {
     static url = "/main/klinik/kunjungan/"
 
     constructor(json_data) {
-        console.log(json_data)
         this.data = json_data
         this.data['nama_pasien'] = this.data['pasien']['nama']
         this.data['nama_dokter'] = this.data['dokter']['nama']
