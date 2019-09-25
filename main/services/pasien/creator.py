@@ -41,6 +41,6 @@ class PasienCreator():
         }.get(kategori, Umum)(**self.params)
 
     def init_subsidi(self):
-        Subsidi_Kunjungan.create_pasien_subsidi_from_parameter(self.pasien)
-        Subsidi_Obat.create_pasien_subsidi_from_parameter(self.pasien)
-        Subsidi_Tindakan.create_pasien_subsidi_from_parameter(self.pasien)
+        Subsidi_Kunjungan.create_from_parameter(self.pasien)
+        Subsidi_Obat.create_from_parameter(self.pasien)
+        Subsidi_Tindakan.create_from_parameter(self.pasien)
