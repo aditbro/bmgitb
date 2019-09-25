@@ -10,8 +10,16 @@ _medium_length = 255
 _long_length = 800
 
 class Pasien(models.Model):
+    KATEGORI_CHOICES = [
+        ('Mahasiswa', 'Mahasiswa'),
+        ('Karyawan BMG', 'Karyawan BMG'),
+        ('Karyawan ITB', 'Karyawan ITB'),
+        ('Keluarga Karyawan ITB', 'Keluarga Karyawan ITB'),
+        ('Umun', 'Umum'),
+        ('Mitra Kerja Sama', 'Mitra Kerja Sama')
+    ]
     no_pasien = models.CharField(max_length=_short_length, null=True, blank=True)
-    kategori = models.CharField(max_length=_short_length)
+    kategori = models.CharField(max_length=_short_length, choices=KATEGORI_CHOICES)
     nama = models.CharField(max_length=_medium_length)
     tipe_kartu_identitas = models.CharField(max_length=_short_length)
     nomor_kartu_identitas = models.CharField(max_length=_short_length)

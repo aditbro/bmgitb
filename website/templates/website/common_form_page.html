@@ -1,0 +1,17 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  {% include 'website/common_header.html' %}
+	{% include 'website/common_form_header.html' %}
+</head>
+<body>
+  {% include 'website/common_navbar.html' %}
+  {% include 'website/'|add:Resource|lower|add:'_form.html' %}
+  {% include 'website/common_script.html' %}
+<body>
+<html>
+<script src="{% static 'js/website/form/common_form.js' %}"></script>
+<script>
+  var Resource = {{ Resource }}
+</script>

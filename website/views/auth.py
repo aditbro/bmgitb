@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpRequest, Http404, JsonResponse
 from django.shortcuts import render
 from main.models import Client
 from .main import *
+import pry
 
 def login(request):
     return render(request, 'website/login.html')

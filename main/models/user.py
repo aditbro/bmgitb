@@ -9,7 +9,7 @@ _short_length = 100
 _medium_length = 255
 _long_length = 800
 
-class Client(User) :
+class Client(User):
     access_token = models.CharField(max_length=_short_length, null=True, blank=True)
     token_expire_time = models.DateTimeField(null=True, blank=True)
     created_date = models.DateField(auto_now_add=True)

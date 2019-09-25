@@ -44,7 +44,7 @@ class DaftarPasienTest(TestCase):
         self.assertTemplateUsed(response, 'website/common_daftar_page.html')
 
     def test_when_access_token_exist_but_unallowed_roles(self):
-        client = Client.create_client('test', 'test', 'diagnosis')
+        client = Client.create_client('test', 'test', 'apotek')
         access_token = client.generate_access_token()
         self.client.cookies['access_token'] = access_token
 

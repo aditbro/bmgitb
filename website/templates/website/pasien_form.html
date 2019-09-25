@@ -1,0 +1,127 @@
+<div class="container">
+<form style="background-color: white;">
+  <div class="row">
+    <div class="col s8 offset-s2">
+      <div class="row">
+        <div class="input-field col s12">
+          <h1>Form Pasien</h1>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <select id="pasien-kategori" name="pasien-kategori">
+            <option value="" disabled selected>Kategori Pasien</option>
+            {% if pasien.kategori %}
+              <option value={{ pasien.kategori }} disabled selected>{{ pasien.kategori }}</option>
+            {% else %}
+              {% for kategori in kategori_pasien %}
+                <option value="{{ kategori.0 }}">{{ kategori.0 }}</option>
+              {% endfor %}
+            {% endif %}
+          </select>
+          <label>Kategori Pasien</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="pasien-nama" name="pasien-nama" type="text" class="validate" value="{{ pasien.nama }}">
+          <label class="active" for="pasien-nama">Nama Pasien</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="pasien-tipe-kartu" name="pasien-tipe-kartu" type="text" class="validate" value="{{ pasien.tipe_kartu_identitas }}">
+          <label class="active" for="pasien-tipe-kartu">Tipe Kartu Identitas Pasien</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="pasien-nomor-kartu" name="pasien-nomor-kartu" type="text" class="validate" value="{{ pasien.nomor_kartu_identitas }}">
+          <label class="active" for="pasien-nomor-kartu">Nomor Kartu Identitas Pasien</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="pasien-tempat-lahir" name="pasien-tempat-lahir" type="text" class="validate" value="{{ pasien.tempat_lahir }}">
+          <label class="active" for="pasien-tempat-lahir">Tempat Lahir Pasien</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="pasien-tanggal-lahir" name="pasien-tanggal-lahir" type="text" class="datepicker" value="{{ pasien.tanggal_lahir }}">
+          <label class="active" for="pasien-tanggal-lahir">Tanggal Lahir Pasien</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <select id="pasien-gender" name="pasien-gender">
+            {% if pasien.kategori %}
+              <option value={{ pasien.gender }} disabled selected>{{ pasien.gender }}</option>
+            {% else %}
+              <option value="" disabled selected>Choose your option</option>
+              <option value="Laki - laki">Laki - laki</option>
+              <option value="Perempuan">Perempuan</option>
+            {% endif %}
+          </select>
+          <label>Jenis Kelamin Pasien</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="pasien-email" name="pasien-email" type="text" value="{{ pasien.email }}">
+          <label class="active" for="pasien-email">Email</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="pasien-no-telp" name="pasien-no-telp" type="text" value="{{ pasien.no_telepon }}">
+          <label class="active" for="pasien-no-telp">No telp</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="pasien-no-hp" name="pasien-no-hp" type="text" value="{{ pasien.no_hp }}">
+          <label class="active" for="pasien-no-hp">No HP</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="pasien-gol-darah" name="pasien-gol-darah" type="text" value="{{ pasien.golongan_darah }}">
+          <label class="active" for="pasien-gol-darah">Golongan Darah</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="pasien-rhesus" name="pasien-rhesus" type="text" value="{{ pasien.rhesus }}">
+          <label class="active" for="pasien-rhesus">Rhesus</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="pasien-catatan" name="pasien-catatan" type="text" value="{{ pasien.catatan }}">
+          <label class="active" for="pasien-catatan">Catatan</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="pasien-alamat" name="pasien-alamat" type="text" value="{{ pasien.alamat }}">
+          <label class="active" for="pasien-alamat">Alamat</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="pasien-kota" name="pasien-kota" type="text" value="{{ pasien.kota }}">
+          <label class="active" for="pasien-kota">Kota</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col s3 offset-s9">
+          <button class="btn waves-effect waves-light {{ button_status }}" type="submit" name="submit">Submit
+            <i class="material-icons right">send</i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+</div>

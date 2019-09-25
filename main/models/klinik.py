@@ -42,8 +42,7 @@ class Tindakan(models.Model):
     kode = models.CharField(max_length=_short_length, primary_key=True)
     keterangan = models.CharField(max_length=_long_length)
     tarif = models.IntegerField()
-    is_subsidi = models.CharField(max_length=_short_length, default='False')
-    is_cash = models.CharField(max_length=_short_length, default='True')
+    is_subsidi = models.BooleanField()
 
     def __str__(self):
         return self.nama

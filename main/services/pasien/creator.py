@@ -38,7 +38,7 @@ class PasienCreator():
             'Keluarga Karyawan': Keluarga_Karyawan_ITB,
             'Mitra Kerja Sama': Mitra_Kerja_Sama,
             'Umum': Umum
-        }.get(kategori)(**self.params)
+        }.get(kategori, Umum)(**self.params)
 
     def init_subsidi(self):
         Subsidi_Kunjungan.create_pasien_subsidi_from_parameter(self.pasien)

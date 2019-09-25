@@ -7,7 +7,7 @@ class Pasien {
     constructor(json_data) {
         this.data = json_data
         this.resource_url = "/main/pasien/" + json_data["no_pasien"] + "/"
-        this.data_page_url = "/pasien/" + json_data["no_pasien"] + "/"
+        this.data_page_url = "/pasien/data/" + json_data["no_pasien"] + "/"
     }
 
     static get_search_dict(search_text) {

@@ -19,6 +19,11 @@ function login() {
     xhttp.send(data)
 }
 
+function logout() {
+    Cookies.set('access_token', '')
+    window.location.href = '/'
+}
+
 function getLoginData() {
     username = document.getElementById("username").value
     password = document.getElementById("password").value
@@ -40,7 +45,6 @@ function verifyLogin(xhttp) {
 
 function saveAccessTokenToCookie(token) {
     Cookies.set('access_token', token)
-    console.log(token)
 }
 
 function moveToMainPage() {

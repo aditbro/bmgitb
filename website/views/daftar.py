@@ -4,12 +4,12 @@ from main.models import Client
 from .main import *
 from .auth import *
 
-@allow_only_roles(['admin', 'loket'])
+@allow_only_roles(['admin', 'loket', 'diagnosis'])
 def daftar_pasien(request):
     context = {'Resource': 'Pasien'}
     return render(request, 'website/common_daftar_page.html', context)
 
-@allow_only_roles(['admin', 'loket'])
+@allow_only_roles(['admin', 'loket', 'diagnosis'])
 def daftar_kunjungan(request):
     context = {'Resource': 'Kunjungan'}
     return render(request, 'website/common_daftar_page.html', context)
