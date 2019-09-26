@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpRequest, Http404, JsonResponse
 from django.db import IntegrityError, transaction
 from django.forms.models import model_to_dict
 from main.api import BaseController
-from main.models import PembelianResep, PembelianObatResep, Obat, PembelianObatOTC, PembelianOTC, Pasien
+from main.models import PembelianResep, PembelianObatResep, Obat, PembelianObatOTC, PembelianOTC, Pasien, Subsidi_Obat
 from main.services import GetModelList, get_list_params
 from .helper import *
 from .auth_decorators import *
@@ -22,9 +22,7 @@ class ApotekController(BaseController):
             list_obat = params.pop('obat')
             pembelian = params
 
-            with transaction.atomic():
-                pembelian = self.insert_pembelian(pembelian)
-                self.insert_obat(pembelian, list_obat)
+            self.create_new(pembelian, list_obat)
             
             return JsonResponse({'response':'success'}, status=200)
         except Exception as e:
@@ -47,7 +45,7 @@ class ApotekController(BaseController):
             pembelian_list = GetModelList(self.PembelianClass, **list_params).call()
             pembelian_list = list(map(lambda pembelian: pembelian.serialize(), pembelian_list))
 
-            data = { 
+            data = {
                 'pembelian': pembelian_list,
                 'response': 'success',
             }
@@ -57,6 +55,10 @@ class ApotekController(BaseController):
             response = {'response':'Exception '+e.__str__()}
             return JsonResponse(response, status=400)
         
+    def create_new(self, pembelian, list_obat):
+        with transaction.atomic():
+            pembelian = self.insert_pembelian(pembelian)
+            self.insert_obat(pembelian, list_obat)    
 
     def insert_pembelian(self, pembelian):
         pembelian = self.PembelianClass(**pembelian)
@@ -74,6 +76,20 @@ class ApotekController(BaseController):
 class ApotekResepController(ApotekController):
     PembelianObatClass = PembelianObatResep
     PembelianClass = PembelianResep
+
+    def create_new(self, pembelian, list_obat):
+        with transaction.atomic():
+            pembelian = self.insert_pembelian(pembelian)
+            self.reduce_subsidi_pasien(pembelian)
+            self.insert_obat(pembelian, list_obat)  
+
+    def reduce_subsidi_pasien(self, pembelian):
+        amount = pembelian.subsidi
+        subsidi = Subsidi_Obat.objects.get(
+            pasien__no_pasien = pembelian.pasien.no_pasien
+        )
+
+        subsidi.substract(amount)
 
 class ApotekOTCController(ApotekController):
     PembelianObatClass = PembelianObatOTC

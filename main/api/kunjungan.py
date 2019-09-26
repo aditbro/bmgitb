@@ -1,6 +1,6 @@
 from django.views import defaults
 from django.http import HttpResponse, HttpRequest, Http404, JsonResponse
-from django.db import IntegrityError
+from django.db import IntegrityError, transaction
 from django.forms.models import model_to_dict
 from main.models import Pasien, Mahasiswa
 from main.models import Kunjungan, Tindakan_Kunjungan
@@ -17,7 +17,7 @@ class KunjunganController(BaseController):
     def create(self, request):
         try :
             form_data = json.loads(request.body)
-            KunjunganCreator(form_data).cal()
+            KunjunganCreator(form_data).call()
             return JsonResponse({'response':'success'}, status=200)
         except Exception as e:
             traceback.print_exc()
@@ -51,11 +51,20 @@ class KunjunganController(BaseController):
             response = {'response':'Exception '+e.__str__()}
             return JsonResponse(response, status=400)
 
-    # @allow_only_roles(['loket', 'admin'])
-    # def update(self, request):
-    #     try :
-    #         self.update_kunjungan(json.loads(request.body))
-    #         return JsonResponse({'response':'success'}, status=200)
-    #     except Exception as e:
-    #         response = {'response':'Exception '+e.__str__()}
-    #         return JsonResponse(response, status=400)
+    @allow_only_roles(['loket', 'admin'])
+    def update(self, request, kode_kunjungan):
+        try :
+            with transaction.atomic():
+                form_data = json.loads(request.body)
+                new_kunjungan = KunjunganCreator(form_data).call()
+
+                old_kunjungan = Kunjungan.objects.get(kode=kode_kunjungan, is_valid=True)
+                old_kunjungan.is_valid = False
+                old_kunjungan.koreksi = new_kunjungan
+                old_kunjungan.save()
+                
+            return JsonResponse({'response':'success'}, status=200)
+        except Exception as e:
+            traceback.print_exc()
+            response = {'response':'Exception '+e.__str__()}
+            return JsonResponse(response, status=400)

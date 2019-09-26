@@ -6,7 +6,8 @@ from main.models import(
     Klinik,
     Diagnosis,
     Diagnosis_Kunjungan,
-    Tindakan_Kunjungan
+    Tindakan_Kunjungan,
+    Subsidi_Tindakan
 )
 
 class KunjunganCreator():
@@ -19,13 +20,16 @@ class KunjunganCreator():
         self.tindakan_kunjungan = []
         self.diagnosis_kunjungan = []
 
-    def cal(self):
+    def call(self):
         with transaction.atomic():
             self.create_kunjungan()
             if(self.tindakan_params):
                 self.insert_tindakan()
+                self.reduce_subsidi_tindakan()
             if(self.diagnosis_params):
                 self.insert_diagnosis()
+        
+        return self.kunjungan
 
     def create_kunjungan(self):
         self.kunjungan_params['kode'] = Kunjungan.new_id()
@@ -50,3 +54,11 @@ class KunjunganCreator():
             diagnosis['kunjungan'] = self.kunjungan
 
             self.diagnosis_kunjungan.append(Diagnosis_Kunjungan.objects.create(**diagnosis))
+
+    def reduce_subsidi_tindakan(self):
+        for tindakan in self.tindakan_kunjungan:
+            subsidi_tindakan = Subsidi_Tindakan.objects.get(
+                pasien__no_pasien=self.kunjungan.pasien.no_pasien,
+                tindakan__kode=tindakan.kode
+            )
+            subsidi_tindakan.substract(tindakan.klaim)
