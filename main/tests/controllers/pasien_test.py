@@ -13,7 +13,10 @@ from main.models import(
 from main.tests.factories import(
     PasienFactory,
     ClientFactory,
-    MahasiswaFactory
+    MahasiswaFactory,
+    ParameterSubsidiKunjunganFactory,
+    ParameterSubsidiObatFactory,
+    ParameterSubsidiTindakanFactory
 )
 from main.services import GetModelList
 import json
@@ -27,8 +30,11 @@ class PasienControllerTestCase(TestCase):
         self.auth_headers = { 'HTTP_ACCESS_TOKEN' : self.user.generate_access_token() }
 
     def test_pasien_create(self):
+        ParameterSubsidiKunjunganFactory.create(kategori_pasien='Mahasiswa')
+        ParameterSubsidiObatFactory.create(kategori_pasien='Mahasiswa')
+        ParameterSubsidiTindakanFactory.create(kategori_pasien='Mahasiswa')
         new_pasien = MahasiswaFactory.build()
-        data = model_to_dict(new_pasien)
+        data = new_pasien.serialize()
 
         response = Request().post(
             '/main/pasien/', data, **self.auth_headers, content_type='application/json'
@@ -43,6 +49,9 @@ class PasienControllerTestCase(TestCase):
             new_pasien.nomor_kartu_identitas
         )
         self.assertEqual(saved_pasien.kategori, new_pasien.kategori)
+        self.assertTrue(saved_pasien.subsidi_kunjungan_set)
+        self.assertTrue(saved_pasien.subsidi_obat_set)
+        self.assertTrue(saved_pasien.subsidi_tindakan_set)
 
     def test_pasien_get(self):
         new_pasien = MahasiswaFactory.create()
