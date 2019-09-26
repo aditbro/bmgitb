@@ -37,6 +37,12 @@ class Subsidi_Tindakan(Subsidi):
             subsidi = cls(**parameter_subsidi)
             subsidi.save()
 
+    def serialize(self):
+        subsidi = model_to_dict(self)
+        subsidi['tindakan'] = self.tindakan.kode
+
+        return subsidi
+
 class Subsidi_Obat(Subsidi):
     keterangan = models.CharField(max_length=_long_length, null=True, blank=True)
     pasien = models.ForeignKey('Pasien', on_delete=models.CASCADE)
@@ -57,6 +63,10 @@ class Subsidi_Obat(Subsidi):
 
             subsidi = cls(**parameter_subsidi)
             subsidi.save()
+
+    def serialize(self):
+        subsidi = model_to_dict(self)
+        return subsidi
 
 class Subsidi_Kunjungan(Subsidi):
     keterangan = models.CharField(max_length=_long_length, null=True, blank=True)
@@ -79,6 +89,12 @@ class Subsidi_Kunjungan(Subsidi):
 
             subsidi = cls(**parameter_subsidi)
             subsidi.save()
+
+    def serialize(self):
+        subsidi = model_to_dict(self)
+        subsidi['klinik'] = self.klinik.kode
+
+        return subsidi
 
 class Parameter_Subsidi_Tindakan(models.Model):
     kategori_pasien = models.CharField(max_length=_short_length)

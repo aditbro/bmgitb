@@ -69,6 +69,7 @@ class PasienControllerTestCase(TestCase):
             new_pasien.nomor_kartu_identitas
         )
         self.assertEqual(fetched_pasien['no_hp'], new_pasien.no_hp)
+        self.assertTrue(fetched_pasien['subsidi'])
 
     def test_list_pasien_without_search_parameter(self):
         pasien_list = MahasiswaFactory.create_batch(20)

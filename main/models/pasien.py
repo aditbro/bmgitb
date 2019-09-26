@@ -50,6 +50,19 @@ class Pasien(models.Model):
 
         return pasien
 
+    def serialize_subsidi(self):
+        subsidi = {}
+        subsidi['obat'] = [x.serialize() for x in self.subsidi_obat_set.all()]
+        subsidi['tindakan'] = [x.serialize() for x in self.subsidi_tindakan_set.all()]
+        subsidi['kunjungan'] = [x.serialize() for x in self.subsidi_tindakan_set.all()]
+
+        return subsidi
+
+    def init_subsidi(self):
+        Subsidi_Kunjungan.create_from_parameter(self)
+        Subsidi_Obat.create_from_parameter(self)
+        Subsidi_Tindakan.create_from_parameter(self)
+
 class Mahasiswa(Pasien):
     nim = models.CharField(max_length=_short_length, unique=True)
     strata = models.CharField(max_length=_short_length)

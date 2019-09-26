@@ -56,10 +56,24 @@ class Tindakan_Kunjungan(models.Model):
     tindakan = models.ForeignKey('Tindakan', on_delete=models.CASCADE)
     cash = models.IntegerField()
     klaim = models.IntegerField()
+
+    def serialize(self):
+        tindakan = model_to_dict(self)
+        tindakan['kunjungan'] = self.kunjungan.kode
+        tindakan['tindakan'] = self.tindakan.kode
+
+        return tindakan
         
 class Diagnosis_Kunjungan(models.Model):
     kunjungan = models.ForeignKey('Kunjungan', on_delete=models.CASCADE)
-    Diagnosis = models.ManyToManyField('Diagnosis')
+    diagnosis = models.ForeignKey('Diagnosis', on_delete=models.CASCADE)
+
+    def serialize(self):
+        diagnosis = model_to_dict(self)
+        diagnosis['kunjungan'] = self.kunjungan.kode
+        diagnosis['diagnosis'] = self.diagnosis.kode
+
+        return diagnosis
 
 class Parameter_Tarif_Kunjungan(models.Model):
     kategori_pasien = models.CharField(max_length=_short_length)

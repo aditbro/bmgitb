@@ -9,6 +9,11 @@ from main.models import(
 )
 from main.tests.factories import(
     KunjunganFactory,
+    DiagnosisKunjunganFactory,
+    TindakanKunjunganFactory,
+    ParameterSubsidiTindakanFactory,
+    DiagnosisFactory,
+    TindakanFactory,
     DokterFactory,
     ClientFactory,
     MahasiswaFactory
@@ -16,6 +21,7 @@ from main.tests.factories import(
 from main.services import GetModelList
 import json
 import pry
+import random
 
 class KunjunganControllerTestCase(TestCase):
     '''test kunjungan controller behaviour'''
@@ -25,10 +31,23 @@ class KunjunganControllerTestCase(TestCase):
         self.auth_headers = { 'HTTP_ACCESS_TOKEN' : self.user.generate_access_token() }
 
     def test_kunjungan_create(self):
+        diagnosis = DiagnosisFactory.create()
+        new_diagnosis = DiagnosisKunjunganFactory.build_batch(random.randint(0, 3), diagnosis=diagnosis)
+        tindakan = TindakanFactory.create()
+        subsidi_tindakan = ParameterSubsidiTindakanFactory.create(tindakan=tindakan, kategori_pasien='Mahasiswa')
+        new_tindakan = TindakanKunjunganFactory.build_batch(random.randint(0, 3), tindakan=tindakan)
+
         new_pasien = MahasiswaFactory.create()
+        new_pasien.init_subsidi()
         new_dokter = DokterFactory.create()
         new_kunjungan = KunjunganFactory.build(pasien=new_pasien, dokter=new_dokter)
-        data = {'kunjungan': new_kunjungan.serialize()}
+
+        data = {
+            'kunjungan': new_kunjungan.serialize(),
+            'tindakan': [tindakan.serialize() for tindakan in new_tindakan],
+            'diagnosis': [diagnosis.serialize() for diagnosis in new_diagnosis]
+        }
+
         data['kunjungan']['pasien'] = data['kunjungan']['pasien']['no_pasien']
         data['kunjungan']['klinik'] = data['kunjungan']['klinik']['kode']
         data['kunjungan']['dokter'] = data['kunjungan']['dokter']['kode']

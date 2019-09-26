@@ -48,4 +48,15 @@ class TindakanFactory(factory.django.DjangoModelFactory):
     keterangan = func(faker.pystr)
     tarif = fatr(lambda obj: random.randint(10000, 100000))
     is_subsidi = fatr(lambda obj: choice([True, False]))
+
+class DiagnosisFactory(factory.django.DjangoModelFactory):
+    '''Generate random diagnosis data'''
+
+    class Meta:
+        model = Diagnosis
+
+    nama = func(faker.pystr)
+    kode = func(faker.itin)
+    keterangan = func(faker.pystr)
+    
     

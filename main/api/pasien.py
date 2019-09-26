@@ -30,8 +30,10 @@ class PasienController(BaseController):
     def get(self, request, no_pasien):
         try :
             pasien = PasienFetcher(no_pasien).fetch()
-            pasien = pasien.serialize()
-            return JsonResponse({'pasien':pasien,'response':'success'}, status=200)
+            pasien_dict = pasien.serialize()
+            pasien_dict['subsidi'] = pasien.serialize_subsidi()
+
+            return JsonResponse({'pasien':pasien_dict,'response':'success'}, status=200)
         except Exception as e:
             response = {'response':'Exception '+e.__str__()}
             return JsonResponse(response, status=400)

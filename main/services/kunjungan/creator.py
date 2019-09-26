@@ -7,8 +7,10 @@ from main.models import(
     Diagnosis,
     Diagnosis_Kunjungan,
     Tindakan_Kunjungan,
-    Subsidi_Tindakan
+    Subsidi_Tindakan,
+    Tindakan
 )
+import pry
 
 class KunjunganCreator():
     def __init__(self, params):
@@ -43,22 +45,23 @@ class KunjunganCreator():
 
     def insert_tindakan(self):
         for tindakan in self.tindakan_params:
-            tindakan['tindakan'] = Tindakan.objects.get(kode=tindakan.pop('kode'))
+            tindakan['tindakan'] = Tindakan.objects.get(kode=tindakan.pop('tindakan'))
             tindakan['kunjungan'] = self.kunjungan
 
             self.tindakan_kunjungan.append(Tindakan_Kunjungan.objects.create(**tindakan))
 
     def insert_diagnosis(self):
         for diagnosis in self.diagnosis_params:
-            diagnosis['diagnosis'] = Diagnosis.objects.get(kode=diagnosis.pop('kode'))
+            diagnosis['diagnosis'] = Diagnosis.objects.get(kode=diagnosis.pop('diagnosis'))
             diagnosis['kunjungan'] = self.kunjungan
 
             self.diagnosis_kunjungan.append(Diagnosis_Kunjungan.objects.create(**diagnosis))
 
     def reduce_subsidi_tindakan(self):
         for tindakan in self.tindakan_kunjungan:
-            subsidi_tindakan = Subsidi_Tindakan.objects.get(
-                pasien__no_pasien=self.kunjungan.pasien.no_pasien,
-                tindakan__kode=tindakan.kode
-            )
-            subsidi_tindakan.substract(tindakan.klaim)
+            if(tindakan.klaim > 0):
+                subsidi_tindakan = Subsidi_Tindakan.objects.get(
+                    pasien__no_pasien=self.kunjungan.pasien.no_pasien,
+                    tindakan__kode=tindakan.tindakan.kode
+                )
+                subsidi_tindakan.substract(tindakan.klaim)
