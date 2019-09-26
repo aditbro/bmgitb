@@ -24,17 +24,6 @@ class Kunjungan(models.Model):
     is_valid = models.BooleanField(blank=True, default=True)
 
     @classmethod
-    def create(cls, **parameters):
-        parameters['kode'] = cls.new_id()
-        parameters['pasien'] = Pasien.objects.get(no_pasien=parameters['pasien'])
-        parameters['klinik'] = Klinik.objects.get(kode=parameters['klinik'])
-        parameters['dokter'] = Dokter.objects.get(kode=parameters['dokter'])
-        parameters['cash'] = parameters['tarif']
-        parameters['klaim'] = 0
-
-        return cls.objects.create(**parameters)
-
-    @classmethod
     def new_id(cls):
         return 'Ku-' + Faker().uuid4(cast_to=str)[:8]
 
@@ -67,48 +56,6 @@ class Tindakan_Kunjungan(models.Model):
     tindakan = models.ForeignKey('Tindakan', on_delete=models.CASCADE)
     cash = models.IntegerField()
     klaim = models.IntegerField()
-
-    def __init__(self, *args, **kwargs):
-        required_column = ['kunjungan', 'tindakan', 'cash', 'klaim']
-        construction_parameter = {}
-
-        for key,value in kwargs.items() :
-            construction_parameter[key] = value
-            if key in required_column :
-                required_column.remove(key)
-
-        if(not args and kwargs):        
-            if required_column :
-                raise Exception("missing parameter(s) " + ", ".join(required_column))
-
-            construction_parameter['kunjungan'] = Kunjungan.objects.get(id=kwargs['kunjungan'])
-            construction_parameter['tindakan'] = Tindakan.objects.get(kode=kwargs['tindakan'])
-
-        super().__init__(*args, **construction_parameter)
-
-    def save(self):
-        if(self.tindakan.is_subsidi):
-            self.reduce_subsidi_pasien()
-            
-        super().save()
-
-    def reduce_subsidi_pasien(self):
-        subsidi_pasien = Subsidi_Tindakan.objects.filter(pasien__id=self.kunjungan.pasien.id, tindakan=self.tindakan)[0]
-        if(subsidi_pasien):
-            subsidi_pasien.sisa_subsidi_bulan_ini -= self.klaim
-            subsidi_pasien.sisa_subsidi_tahunan -= self.klaim
-
-            if(subsidi_pasien.sisa_subsidi_bulan_ini < 0 or subsidi_pasien.sisa_subsidi_tahunan < 0) :
-                raise Exception('Sisa subsidi pasien kurang untuk tindakan {}'.format(self.tindakan.nama))
-
-            subsidi_pasien.save()
-
-    def restore_subsidi_pasien(self):
-        subsidi_pasien = Subsidi_Tindakan.objects.filter(pasien__id=self.kunjungan.pasien.id, tindakan=self.tindakan)[0]
-        if(subsidi_pasien):
-            subsidi_pasien.sisa_subsidi_bulan_ini += self.klaim
-            subsidi_pasien.sisa_subsidi_tahunan += self.klaim
-            subsidi_pasien.save()
         
 class Diagnosis_Kunjungan(models.Model):
     kunjungan = models.ForeignKey('Kunjungan', on_delete=models.CASCADE)

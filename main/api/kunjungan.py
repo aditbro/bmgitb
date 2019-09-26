@@ -4,7 +4,7 @@ from django.db import IntegrityError
 from django.forms.models import model_to_dict
 from main.models import Pasien, Mahasiswa
 from main.models import Kunjungan, Tindakan_Kunjungan
-from main.services import GetModelList, get_list_params
+from main.services import GetModelList, get_list_params, KunjunganCreator
 from .helper import *
 from .auth_decorators import *
 from .base_controller import BaseController
@@ -17,7 +17,7 @@ class KunjunganController(BaseController):
     def create(self, request):
         try :
             form_data = json.loads(request.body)
-            Kunjungan.create(**form_data)
+            KunjunganCreator(form_data).cal()
             return JsonResponse({'response':'success'}, status=200)
         except Exception as e:
             traceback.print_exc()
@@ -51,32 +51,11 @@ class KunjunganController(BaseController):
             response = {'response':'Exception '+e.__str__()}
             return JsonResponse(response, status=400)
 
-    @allow_only_roles(['loket', 'admin', 'apotek'])
-    def update(self, request):
-        if(request.method == 'POST'):
-            try :
-                self.update_kunjungan(json.loads(request.body))
-                return JsonResponse({'response':'success'}, status=200)
-            except Exception as e:
-                response = {'response':'Exception '+e.__str__()}
-                return JsonResponse(response, status=400)
-        else:
-            return defaults.bad_request(request, request.path_info)
-
-    def update_kunjungan(self, post_form):
-        if not 'kode' in post_form :
-            raise Exception('Kode kunjungan is missing from request')
-
-        old_kunjungan = get_kunjungan(post_form['kode'])
-        old_kunjungan.is_valid = False
-        old_kunjungan.restore_subsidi_pasien()
-        old_kunjungan.save()
-
-        new_kunjungan = insert_kunjungan(post_form)
-        new_kunjungan.id = None
-        new_kunjungan.koreksi = old_kunjungan
-        new_kunjungan.save()
-        new_kunjungan.kode = old_kunjungan.kode
-        new_kunjungan.save()
-
-        return new_kunjungan
+    # @allow_only_roles(['loket', 'admin'])
+    # def update(self, request):
+    #     try :
+    #         self.update_kunjungan(json.loads(request.body))
+    #         return JsonResponse({'response':'success'}, status=200)
+    #     except Exception as e:
+    #         response = {'response':'Exception '+e.__str__()}
+    #         return JsonResponse(response, status=400)

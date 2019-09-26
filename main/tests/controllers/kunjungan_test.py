@@ -28,10 +28,10 @@ class KunjunganControllerTestCase(TestCase):
         new_pasien = MahasiswaFactory.create()
         new_dokter = DokterFactory.create()
         new_kunjungan = KunjunganFactory.build(pasien=new_pasien, dokter=new_dokter)
-        data = new_kunjungan.serialize()
-        data['pasien'] = data['pasien']['no_pasien']
-        data['klinik'] = data['klinik']['kode']
-        data['dokter'] = data['dokter']['kode']
+        data = {'kunjungan': new_kunjungan.serialize()}
+        data['kunjungan']['pasien'] = data['kunjungan']['pasien']['no_pasien']
+        data['kunjungan']['klinik'] = data['kunjungan']['klinik']['kode']
+        data['kunjungan']['dokter'] = data['kunjungan']['dokter']['kode']
 
         response = Request().post(
             '/main/klinik/kunjungan/', data, **self.auth_headers, content_type='application/json'
