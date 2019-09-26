@@ -19,5 +19,6 @@ from django.urls import include, path
 urlpatterns = [
     path('', include('website.urls')),
     path('admin/', admin.site.urls),
-    path('main/', include('main.urls'))
+    path('main/', include('main.urls')),
+    path('docs/', include('swagger_ui.urls'))
 ]

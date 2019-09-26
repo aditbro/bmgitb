@@ -38,7 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'website',
-    'main'
+    'main',
+    'swagger_ui',
 ]
 
 MIDDLEWARE = [
@@ -141,3 +142,5 @@ AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'main.models.user.ClientBackEnd'
 ]
+
+SWAGGER_YAML_FILE = 'swagger.yml'
