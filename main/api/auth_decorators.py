@@ -31,7 +31,7 @@ def require_token(func, *o_args, **o_kwargs):
 def allow_only_roles(func, roles, *o_args, **o_kwargs):
     def wrapper(self, request, *args, **kwargs):
         try:
-            token = request.META['HTTP_ACCESS_TOKEN']
+            token = request.META['HTTP_ACCESS_TOKEN'] or request.headers['Access-Token']
             user = Client.authenticate_access_token(token)
             check_if_user_has_role(user, roles)
 

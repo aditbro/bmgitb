@@ -26,7 +26,7 @@ class ParameterSubsidiTindakanFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Parameter_Subsidi_Tindakan
 
-    kategori_pasien = fatr(lambda obj: choice(Pasien.KATEGORI_CHOICES))
+    kategori_pasien = fatr(lambda obj: choice(Pasien.get_kategori_choices()))
     kode = func(faker.itin)
     keterangan = func(faker.pystr)
     tindakan = factory.SubFactory(TindakanFactory)

@@ -63,6 +63,17 @@ class Pasien(models.Model):
         Subsidi_Obat.create_from_parameter(self)
         Subsidi_Tindakan.create_from_parameter(self)
 
+    @classmethod
+    def get_kategori_choices(cls):
+        return [
+        'Mahasiswa',
+        'Karyawan BMG',
+        'Karyawan ITB',
+        'Keluarga Karyawan ITB',
+        'Umum',
+        'Mitra Kerja Sama'
+    ]
+
 class Mahasiswa(Pasien):
     nim = models.CharField(max_length=_short_length, unique=True)
     strata = models.CharField(max_length=_short_length)
