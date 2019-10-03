@@ -3,3 +3,4 @@ db
 migrations/
 mysql
 migrations/
+.env
