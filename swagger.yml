@@ -104,8 +104,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GeneralOkProperties'
-                
+                $ref: '#/components/schemas/GeneralOkProperties'      
   /user/authenticate/:
     post:
       tags:
@@ -132,6 +131,69 @@ paths:
                   access_token:
                     type: string
                     example: "2io1mwqkmedqwke"
+  /klinik/kunjungan/:
+    post:
+      tags:
+        - kunjungan
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                kunjungan:
+                  type: object
+                  properties:
+                    pasien:
+                      type: string
+                      example: "P-213123"
+                    klinik:
+                      type: string
+                      example: "KL-433123"
+                    dokter:
+                      type: string
+                      example: "DK-23213"
+                    tarif:
+                      type: integer
+                      example: 1123
+                    klaim:
+                      type: integer
+                      example: 1000
+                    cash:
+                      type: integer
+                      example: 123
+                    asal:
+                      type: string
+                      example: "Jakarta"
+                tindakan:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      tindakan:
+                        type: string
+                        example: "Tk-3134"
+                      cash:
+                        type: integer
+                        example: 32329
+                      klaim:
+                        type: integer
+                        example: 343
+                diagnosis:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      diagnosis:
+                        type: string
+                        example: "Di-3231"
+      response:
+        200:
+          description: pasien created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralOkProperties'
 components:
   securitySchemes:
     access_token:

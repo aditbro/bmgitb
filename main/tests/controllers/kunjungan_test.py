@@ -51,6 +51,8 @@ class KunjunganControllerTestCase(TestCase):
         data['kunjungan']['pasien'] = data['kunjungan']['pasien']['no_pasien']
         data['kunjungan']['klinik'] = data['kunjungan']['klinik']['kode']
         data['kunjungan']['dokter'] = data['kunjungan']['dokter']['kode']
+        data['kunjungan'].pop('tindakan')
+        data['kunjungan'].pop('diagnosis')
 
         response = Request().post(
             '/main/klinik/kunjungan/', data, **self.auth_headers, content_type='application/json'

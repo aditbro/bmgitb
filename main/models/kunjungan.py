@@ -32,6 +32,8 @@ class Kunjungan(models.Model):
         kunjungan['pasien'] = self.pasien.serialize()
         kunjungan['klinik'] = self.klinik.serialize()
         kunjungan['dokter'] = self.dokter.serialize()
+        kunjungan['tindakan'] = list(map(lambda obj: obj.serialize(), self.tindakan_kunjungan_set.all()))
+        kunjungan['diagnosis'] = list(map(lambda obj: obj.serialize(), self.diagnosis_kunjungan_set.all()))
         kunjungan['waktu_kunjungan'] = str(self.waktu_kunjungan.strftime("%d %b %Y %H:%M"))
         
 
