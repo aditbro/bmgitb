@@ -10,7 +10,8 @@ from main.tests.factories import(
     PembelianResepFactory,
     ObatFactory,
     ClientFactory,
-    PasienFactory
+    PasienFactory,
+    ParameterSubsidiObatFactory
 )
 from main.services import GetModelList
 import datetime
@@ -25,13 +26,16 @@ class ApotekControllerTestCase(TestCase):
         self.auth_headers = { 'HTTP_ACCESS_TOKEN' : self.user.generate_access_token() }
 
     def test_pembelian_create(self):
-        new_pembelian = PembelianResepFactory.create()
+        param_subsidi_obat = ParameterSubsidiObatFactory.create()
+        new_pasien = PasienFactory.create()
+        new_pembelian = PembelianResepFactory.create(pasien=pasien)
         data = new_pembelian.serialize()
         data['pasien'] = data['pasien']['no_pasien']
         data['waktu_pembelian'] = datetime.datetime.now()
         for i in range(len(data['obat'])):
             data['obat'][i]['obat'] = data['obat'][i]['obat']['kode']
 
+        print(data)
         response = Request().post(
             '/main/apotek/resep/', data, **self.auth_headers, content_type='application/json'
         )

@@ -205,6 +205,95 @@ paths:
                 properties:
                   kunjungan:
                     $ref: '#/components/schemas/kunjungan'
+  /apotek/resep/:
+    post:
+      tags:
+        - apotek
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/pembelian_resep'
+      responses:
+        200:
+          description: pembelian resep created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralOkProperties'
+    get:
+      tags:
+        - apotek
+      parameters: 
+        - in: query
+          name: pasien__nama
+          schema:
+            type: string
+            example: "Robert"
+        - in: query
+          name: obat__obat__kode
+          schema:
+            type: string
+            example: "O-12312"
+        - in: query
+          name: tarif
+          schema:
+            type: integer
+            example: 1323
+      responses:
+        200:
+          description: pembelian resep fetched
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pembelian_resep:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/pembelian_resep'
+  /apotek/otc/:
+    post:
+      tags:
+        - apotek
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/pembelian_otc'
+      responses:
+        200:
+          description: pembelian resep created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralOkProperties'
+    get:
+      tags:
+        - apotek
+      parameters: 
+        - in: query
+          name: obat__obat__kode
+          schema:
+            type: string
+            example: "O-12312"
+        - in: query
+          name: tarif
+          schema:
+            type: integer
+            example: 1323
+      responses:
+        200:
+          description: pembelian resep fetched
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pembelian_resep:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/pembelian_otc'
 components:
   securitySchemes:
     access_token:
@@ -314,3 +403,55 @@ components:
               diagnosis:
                 type: string
                 example: "Di-3231"
+    pembelian_resep:
+      type: object
+      properties:
+        pasien:
+          type: string
+          example: "P-23123"
+        tarif:
+          type: integer
+          example: 1235
+        subsidi:
+          type: integer
+          example: 1234
+        bayar:
+          type: integer
+          example: 1
+        obat:
+          type: array
+          items:
+            type: object
+            properties:
+              jumlah:
+                type: integer
+                example: 2
+              obat:
+                type: string
+                example: "O-232"
+              tarif:
+                type: integer
+                example: 2000
+    pembelian_otc:
+      type: object
+      properties:
+        tarif:
+          type: integer
+          example: 1235
+        bayar:
+          type: integer
+          example: 1
+        obat:
+          type: array
+          items:
+            type: object
+            properties:
+              jumlah:
+                type: integer
+                example: 2
+              obat:
+                type: string
+                example: "O-232"
+              tarif:
+                type: integer
+                example: 2000

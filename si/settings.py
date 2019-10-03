@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from dotenv import load_dotenv
+from pathlib import Path 
+env_path = 'si/.env'
+load_dotenv(verbose=True, dotenv_path=env_path)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -78,18 +82,20 @@ WSGI_APPLICATION = 'si.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-# MYSQL_HOSTNAME = os.environ['MYSQL_HOSTNAME']
-# MYSQL_DATABASE = os.environ['MYSQL_DATABASE']
-# MYSQL_ROOT_PASSWORD = os.environ['MYSQL_ROOT_PASSWORD']
+MYSQL_HOSTNAME = os.getenv('MYSQL_HOST')
+MYSQL_PORT = os.getenv('MYSQL_PORT')
+DBPASSWORD = os.getenv('BMG_DBPASSWORD')
+DBNAME = os.getenv('BMG_DBNAME')
+DBUSER = os.getenv('BMG_DBUSER')
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'NAME': 'si',
-        'USER': 'si',
-        'PASSWORD': 'localtest',
+        'HOST': MYSQL_HOSTNAME,
+        'PORT': MYSQL_PORT,
+        'NAME': DBNAME,
+        'USER': DBUSER,
+        'PASSWORD': DBPASSWORD,
     }
 }
 
