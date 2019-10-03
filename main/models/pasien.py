@@ -45,6 +45,7 @@ class Pasien(models.Model):
 
     def serialize(self):
         pasien = model_to_dict(self)
+        pasien['no_pasien'] = self.no_pasien
         pasien['tanggal_lahir'] = str(self.tanggal_lahir)
         pasien['waktu_registrasi'] = str(self.waktu_registrasi.strftime("%d %b %Y %H:%M"))
 

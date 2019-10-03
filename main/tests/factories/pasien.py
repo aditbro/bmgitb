@@ -42,6 +42,11 @@ class PasienFactory(factory.django.DjangoModelFactory):
     kota = func(faker.city)
     kategori = 'Umum'
 
+    @factory.post_generation
+    def generate(self, create, extracted, **kwargs):
+        if create:
+            self.init_subsidi()
+
 class MahasiswaFactory(PasienFactory):
     '''Generate random mahasiswa data'''
     class Meta:

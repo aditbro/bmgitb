@@ -29,5 +29,5 @@ class PasienFetcher():
             'Karyawan ITB': Karyawan_ITB,
             'Keluarga Karyawan': Keluarga_Karyawan_ITB,
             'Mitra Kerja Sama': Mitra_Kerja_Sama,
-            'Umum': Umum
+            'Umum': Pasien
         }.get(kategori).objects.get(no_pasien=self.pasien.no_pasien)
