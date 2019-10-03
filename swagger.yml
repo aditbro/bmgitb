@@ -1,4 +1,4 @@
-openapi: 3.0.2
+openapi: 3.0.0
 info:
   title: BMG API
   version: 1.0.0
@@ -142,58 +142,69 @@ paths:
               type: object
               properties:
                 kunjungan:
-                  type: object
-                  properties:
-                    pasien:
-                      type: string
-                      example: "P-213123"
-                    klinik:
-                      type: string
-                      example: "KL-433123"
-                    dokter:
-                      type: string
-                      example: "DK-23213"
-                    tarif:
-                      type: integer
-                      example: 1123
-                    klaim:
-                      type: integer
-                      example: 1000
-                    cash:
-                      type: integer
-                      example: 123
-                    asal:
-                      type: string
-                      example: "Jakarta"
-                tindakan:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      tindakan:
-                        type: string
-                        example: "Tk-3134"
-                      cash:
-                        type: integer
-                        example: 32329
-                      klaim:
-                        type: integer
-                        example: 343
-                diagnosis:
-                  type: array
-                  items:
-                    type: object
-                    properties:
-                      diagnosis:
-                        type: string
-                        example: "Di-3231"
-      response:
+                  $ref: '#/components/schemas/kunjungan'
+      responses:
         200:
           description: pasien created
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/GeneralOkProperties'
+    get:
+      tags:
+        - kunjungan
+      parameters: 
+        - in: query
+          name: kode
+          schema:
+            type: string
+            example: "Ku-123213"
+          required: false
+        - in: query
+          name: pasien__nama
+          schema:
+            type: string
+            example: "Robert"
+          required: false
+        - in: query
+          name: dokter__nama
+          schema:
+            type: string
+            example: "Bambang"
+          required: false
+      responses:
+        200:
+          description: kunjungan list fetched
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  kunjungan:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/kunjungan'
+  /klinik/kunjungan/{kode_kunjungan}:
+    get:
+      tags:
+        - kunjungan
+      parameters: 
+        - in: path
+          name: kode_kunjungan
+          schema:
+            type: string
+            example: "Ku-123213"
+          required: true
+      responses:
+        200:
+          description: kunjungan list fetched
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  kunjungan:
+                    $ref: '#/components/schemas/kunjungan'
 components:
   securitySchemes:
     access_token:
@@ -257,3 +268,49 @@ components:
         kategori:
           type: string
           enum: ["Umum", "Mahasiswa", "Karyawan BMG", "Karyawan ITB", "Keluarga Karyawan ITB", "Mitra Kerja Sama"]
+    kunjungan:
+      type: object
+      properties:
+        pasien:
+          type: string
+          example: "P-213123"
+        klinik:
+          type: string
+          example: "KL-433123"
+        dokter:
+          type: string
+          example: "DK-23213"
+        tarif:
+          type: integer
+          example: 1123
+        klaim:
+          type: integer
+          example: 1000
+        cash:
+          type: integer
+          example: 123
+        asal:
+          type: string
+          example: "Jakarta"
+        tindakan:
+          type: array
+          items:
+            type: object
+            properties:
+              tindakan:
+                type: string
+                example: "Tk-3134"
+              cash:
+                type: integer
+                example: 32329
+              klaim:
+                type: integer
+                example: 343
+        diagnosis:
+          type: array
+          items:
+            type: object
+            properties:
+              diagnosis:
+                type: string
+                example: "Di-3231"

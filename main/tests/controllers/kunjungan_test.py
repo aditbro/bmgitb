@@ -44,15 +44,11 @@ class KunjunganControllerTestCase(TestCase):
 
         data = {
             'kunjungan': new_kunjungan.serialize(),
-            'tindakan': [tindakan.serialize() for tindakan in new_tindakan],
-            'diagnosis': [diagnosis.serialize() for diagnosis in new_diagnosis]
         }
 
         data['kunjungan']['pasien'] = data['kunjungan']['pasien']['no_pasien']
         data['kunjungan']['klinik'] = data['kunjungan']['klinik']['kode']
         data['kunjungan']['dokter'] = data['kunjungan']['dokter']['kode']
-        data['kunjungan'].pop('tindakan')
-        data['kunjungan'].pop('diagnosis')
 
         response = Request().post(
             '/main/klinik/kunjungan/', data, **self.auth_headers, content_type='application/json'
@@ -65,6 +61,9 @@ class KunjunganControllerTestCase(TestCase):
 
     def test_kunjungan_get(self):
         new_kunjungan = KunjunganFactory.create()
+        new_tindakan = TindakanKunjunganFactory.create(kunjungan=new_kunjungan)
+        new_diagnosis = DiagnosisKunjunganFactory.create(kunjungan=new_kunjungan)
+        
         
         response = Request().get(
             '/main/klinik/kunjungan/{}/'.format(new_kunjungan.kode), **self.auth_headers
@@ -74,6 +73,8 @@ class KunjunganControllerTestCase(TestCase):
         fetched_kunjungan = json.loads(response.content)['kunjungan']
         expected_kunjungan = new_kunjungan.serialize()
         self.assertEqual(fetched_kunjungan['id'], expected_kunjungan['id'])
+        self.assertEqual(len(fetched_kunjungan['tindakan']), len(expected_kunjungan['tindakan']))
+        self.assertEqual(len(fetched_kunjungan['diagnosis']), len(expected_kunjungan['diagnosis']))
 
     def test_list_kunjungan_without_search_parameter(self):
         KunjunganFactory.create_batch(20)

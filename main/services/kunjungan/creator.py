@@ -15,8 +15,8 @@ import pry
 class KunjunganCreator():
     def __init__(self, params):
         self.kunjungan_params = params.get('kunjungan')
-        self.tindakan_params = params.get('tindakan')
-        self.diagnosis_params = params.get('diagnosis')
+        self.tindakan_params = self.kunjungan_params.pop('tindakan')
+        self.diagnosis_params = self.kunjungan_params.pop('diagnosis')
 
         self.kunjungan = None
         self.tindakan_kunjungan = []
