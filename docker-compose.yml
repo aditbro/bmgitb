@@ -18,21 +18,17 @@ services:
         aliases:
           - db
 
-  pma:
-    image: phpmyadmin/phpmyadmin
+  adminer:
+    image: adminer:4.7.3-standalone
     restart: always
     depends_on:
       - db
-    environment:
-      #- PMA_ABSOLUTE_URI=https://arc.itb.ac.id/pma/
-      - PMA_HOST=db
-      - MYSQL_ROOT_PASSWORD=${DBROOT}
     ports:
-      - "${PMA_PORT:-127.0.0.1:10180}:80"
+      - "${ADMINER_PORT:-127.0.0.1:10180}:8080"
     networks:
       net:
         aliases:
-          - pma
+          - adminer
 
   app:
     build:
@@ -67,3 +63,4 @@ networks:
       config:
         - subnet: ${IPV4_NETWORK:-172.254.254}.0/24
         - subnet: ${IPV6_NETWORK:-fd4d:6169:6c63:6f77::/64}
+
