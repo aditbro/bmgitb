@@ -23,12 +23,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '+8+bj)3vduo-s1hjv!&v5%f$b6l8m8lcfy7q&5phoxpe4e7m72'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('PRODUCTION_STATUS')
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'udx.web.id']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '[::1]', 'ehealth.itb.ac.id', '167.205.105.150']
 
 
 # Application definition
@@ -81,19 +81,23 @@ WSGI_APPLICATION = 'si.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-MYSQL_HOSTNAME = os.getenv('MYSQL_HOSTNAME')
-MYSQL_DATABASE = os.getenv('MYSQL_DATABASE')
-MYSQL_USER = os.getenv('MYSQL_USER')
-MYSQL_PASSWORD = os.getenv('MYSQL_PASSWORD')
+DBHOST = os.getenv('DBHOST')
+DBPORT = os.getenv('DBPORT')
+DBNAME = os.getenv('DBNAME')
+DBUSER = os.getenv('DBUSER')
+DBPASS = os.getenv('DBPASS')
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': MYSQL_HOSTNAME,
-        'PORT': '3306',
-        'NAME': MYSQL_DATABASE,
-        'USER': MYSQL_USER,
-        'PASSWORD': MYSQL_PASSWORD,
+        'HOST': DBHOST,
+        'PORT': DBPORT,
+        'NAME': DBNAME,
+        'USER': DBUSER,
+        'PASSWORD': DBPASS,
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
 
@@ -150,3 +154,4 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 SWAGGER_YAML_FILE = 'swagger.yml'
+

@@ -1,6 +1,6 @@
 FROM python:3-alpine
 
-WORKDIR /bmgitb
+WORKDIR /app
 COPY . .
 
 RUN apk add --no-cache --virtual .build-deps \
