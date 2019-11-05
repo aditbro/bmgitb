@@ -40,3 +40,8 @@ admin.site.register(Diagnosis)
 
 #user management
 admin.site.register(Client, UserAdmin)
+
+#admin site
+admin.site.site_header = "BMG Admin"
+admin.site.site_title = "BMG Admin Portal"
+admin.site.index_title = "Welcome to BMG Ehealth"

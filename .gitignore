@@ -1,6 +1,5 @@
-__pycache__
-db
-migrations/
 mysql
-migrations/
+.DS_Store
+.vscode
+__pycache__
 .env
