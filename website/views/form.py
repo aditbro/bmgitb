@@ -12,7 +12,8 @@ def data_pasien(request, no_pasien):
         'Resource': 'Pasien',
         'pasien': pasien.serialize(),
         'kategori_pasien': Pasien.KATEGORI_CHOICES,
-        'button_status': 'disabled'
+        'button_status': 'disabled',
+        'context': 'update'
     }
     return render(request, 'website/common_form_page.html', context)
 
@@ -20,6 +21,7 @@ def form_insert_pasien(request):
     context = {
         'Resource': 'Pasien',
         'kategori_pasien': Pasien.KATEGORI_CHOICES,
+        'context': 'create'
     }
     return render(request, 'website/common_form_page.html', context)
 

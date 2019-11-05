@@ -15,7 +15,7 @@ class Pasien(models.Model):
         ('Karyawan BMG', 'Karyawan BMG'),
         ('Karyawan ITB', 'Karyawan ITB'),
         ('Keluarga Karyawan ITB', 'Keluarga Karyawan ITB'),
-        ('Umun', 'Umum'),
+        ('Umum', 'Umum'),
         ('Mitra Kerja Sama', 'Mitra Kerja Sama')
     ]
     no_pasien = models.CharField(max_length=_short_length, null=True, blank=True)

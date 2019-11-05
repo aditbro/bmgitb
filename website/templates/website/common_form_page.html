@@ -6,12 +6,26 @@
 	{% include 'website/common_form_header.html' %}
 </head>
 <body>
+  {% include 'website/common_overlay.html' %}
   {% include 'website/common_navbar.html' %}
   {% include 'website/'|add:Resource|lower|add:'_form.html' %}
   {% include 'website/common_script.html' %}
 <body>
 <html>
 <script src="{% static 'js/website/form/common_form.js' %}"></script>
+<script src="{% static 'js/website/overlay.js' %}"></script>
 <script>
   var Resource = {{ Resource }}
+</script>
+<script>
+  function send_data(url, data, callback) {
+    data = JSON.stringify(data)
+    xhttp = new XMLHttpRequest()
+    xhttp.onreadystatechange = function() { callback(this) }
+    xhttp.open("POST", url, true);
+    xhttp.setRequestHeader("Content-type", "application/json;charset=UTF-8")
+    xhttp.setRequestHeader("Access-Token", Cookies.get("access_token"))
+    console.log(Cookies.get("access_token"))
+    xhttp.send(data)
+  }
 </script>

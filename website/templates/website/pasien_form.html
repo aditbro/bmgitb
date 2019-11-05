@@ -1,5 +1,5 @@
 <div class="container">
-<form style="background-color: white;">
+<form id="pasien-form" style="background-color: white;">
   <div class="row">
     <div class="col s8 offset-s2">
       <div class="row">
@@ -7,6 +7,14 @@
           <h1>Form Pasien</h1>
         </div>
       </div>
+      {% if pasien.no_pasien %}
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="pasien-no" name="pasien-no" type="text" class="validate" value="{{ pasien.no_pasien }}" disabled>
+            <label class="active" for="pasien-no">No. Pasien</label>
+          </div>
+        </div>
+      {% endif %}
       <div class="row">
         <div class="input-field col s12">
           <select id="pasien-kategori" name="pasien-kategori">
@@ -55,7 +63,7 @@
       <div class="kategori-mahasiswa">
         <div class="row">
           <div class="input-field col s12">
-            <input id="pasien-nim" name="pasien-nim" type="text" class="validate" value="{{ pasien.nim }}">
+            <input id="pasien-nim" name="pasien-nim" type="number" class="validate" value="{{ pasien.nim }}">
             <label class="active" for="pasien-nim">NIM Pasien</label>
           </div>
         </div>
@@ -85,8 +93,8 @@
         </div>
         <div class="row">
           <div class="input-field col s12">
-            <input id="pasien-fakultras" name="pasien-fakultras" type="text" class="validate" value="{{ pasien.fakultras }}">
-            <label class="active" for="pasien-fakultras">Fakultas Mahasiswa</label>
+            <input id="pasien-fakultas" name="pasien-fakultas" type="text" class="validate" value="{{ pasien.fakultas }}">
+            <label class="active" for="pasien-fakultas">Fakultas Mahasiswa</label>
           </div>
         </div>
       </div>
@@ -136,13 +144,13 @@
       </div>
       <div class="row">
         <div class="input-field col s12">
-          <input id="pasien-no-telp" name="pasien-no-telp" type="text" value="{{ pasien.no_telepon }}">
+          <input id="pasien-no-telp" name="pasien-no-telp" type="number" value="{{ pasien.no_telepon }}">
           <label class="active" for="pasien-no-telp">No telp</label>
         </div>
       </div>
       <div class="row">
         <div class="input-field col s12">
-          <input id="pasien-no-hp" name="pasien-no-hp" type="text" value="{{ pasien.no_hp }}">
+          <input id="pasien-no-hp" name="pasien-no-hp" type="number" value="{{ pasien.no_hp }}">
           <label class="active" for="pasien-no-hp">No HP</label>
         </div>
       </div>
@@ -178,7 +186,7 @@
       </div>
       <div class="row">
         <div class="col s3 offset-s9">
-          <button class="btn waves-effect waves-light {{ button_status }}" type="submit" name="submit">Submit
+          <button class="btn waves-effect waves-light {{ button_status }}" id="submit-pasien">Submit
             <i class="material-icons right">send</i>
           </button>
         </div>
@@ -188,6 +196,7 @@
 </form>
 </div>
 <script>
+  var context = '{{ context }}'
   var kategori_field = document.getElementById("pasien-kategori")
 
   function show_pasien_kategori_field(kategori) {
@@ -213,4 +222,134 @@
   kategori_field.addEventListener("change", function() {
     show_pasien_kategori_field(this.value)
   })
+</script>
+<script>
+  new_pasien_field = {
+    'pasien-kategori': 'kategori',
+    'pasien-nama': 'nama',
+    'pasien-tipe-kartu': 'tipe_kartu_identitas',
+    'pasien-nomor-kartu': 'nomor_kartu_identitas',
+    'pasien-tempat-lahir': 'tempat_lahir',
+    'pasien-tanggal-lahir': 'tanggal_lahir',
+    'pasien-email': 'email',
+    'pasien-no-hp': 'no_hp',
+    'pasien-gol-darah': 'golongan_darah',
+    'pasien-rhesus': 'rhesus',
+    'pasien-catatan': 'catatan',
+    'pasien-alamat': 'alamat',
+    'pasien-kota': 'kota'
+  }
+  existing_pasien_field = { ...new_pasien_field, 'pasien-no': 'no_pasien' }
+  mahasiswa_field = {
+    'pasien-nim': 'nim',
+    'pasien-strata': 'strata',
+    'pasien-internasional': 'internasional',
+    'pasien-tpb': 'tpb',
+    'pasien-program-studi': 'program_studi',
+    'pasien-fakultas': 'fakultas'
+  }
+  karyawan_field = { 'pasien-nip': 'nip' }
+  keluarga_field = { 'karyawan-nip': 'nip' }
+  mitra_field = { 'pasien-organisasi': 'organisasi' }
+
+  function get_fields_data(fields) {
+    if(context == 'update') {
+      fields = { 'pasien-no': 'no_pasien', ...fields }
+    }
+
+    data = {}
+    Object.keys(fields).forEach(function(key){
+      data[fields[key]] = document.getElementById(key).value
+    })
+    return data
+  }
+
+  function get_kategori_fields(kategori) {
+    switch(kategori) {
+      case 'Umum':
+        return get_fields_umum()
+      case 'Mahasiswa':
+        return get_fields_mahasiswa()
+      case 'Karyawan BMG':
+      case 'Karyawan ITB':
+        return get_fields_karyawan()
+      case 'Mitra Kerja Sama':
+        return get_fields_mitra()
+      case 'Keluarga Karyawan ITB':
+        return get_fields_keluarga()
+      default:
+        alert("Invalid kategori")
+        throw "Invalid kategori"
+    }
+  }
+
+  function get_fields_mahasiswa() {
+    return fields = { ...new_pasien_field, ...mahasiswa_field }  
+  }
+
+  function get_fields_karyawan() {
+    return fields = { ...new_pasien_field, ...karyawan_field }
+  }
+
+  function get_fields_umum() {
+    return new_pasien_field
+  }
+
+  function get_fields_mitra() {
+    return fields = { ...new_pasien_field, ...mitra_field }
+  }
+
+  function get_fields_keluarga() {
+    return fields = { ...new_pasien_field, ...keluarga_field }
+  }
+</script>
+<script>
+  document.getElementById("submit-pasien").addEventListener("click", function(event){
+    event.preventDefault()
+    submit_pasien_data()
+  });
+
+  function validate_pasien_form(kategori) {
+    fields = get_kategori_fields(kategori)
+    invalid = false
+
+    Object.keys(fields).forEach(function(key){
+      element = document.getElementById(key)
+      if(element.classList.contains('validate')) {
+        if(element.value == "" || !element.value || !element.checkValidity()) {
+          element.classList.add('invalid')
+          invalid = true
+        }
+      }
+    })
+
+    if(invalid) {
+      alert("Invalid form")
+      throw "Invalid form"
+    }
+  }
+
+  function submit_pasien_data() {
+    var url = '/main/pasien/'
+    if(context == 'update') {
+      no_pasien = document.getElementById('pasien-no').value
+      url = url + no_pasien + '/'
+    }
+
+    kategori = document.getElementById('pasien-kategori').value
+    validate_pasien_form(kategori)
+    data = get_fields_data(get_kategori_fields(kategori))
+
+    turn_on_overlay()
+    send_data(url, data, check_submit_response)
+  }
+
+  function check_submit_response(xhttp) {
+    turn_off_overlay()
+    if(xhttp.readyState == 4 && xhttp.status == 200) {
+        alert("input data berhasil")
+    } else if(xhttp.readyState == 4){
+        alert(xhttp.responseText)
+    }
+  }
 </script>

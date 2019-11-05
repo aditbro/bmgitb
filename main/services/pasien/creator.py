@@ -29,7 +29,7 @@ class PasienCreator():
 
     def construct_pasien(self):
         kategori = self.params['kategori']
-        self.params['no_pasien'] = Pasien.new_id
+        self.params['no_pasien'] = Pasien.new_id()
         
         return {
             'Mahasiswa': Mahasiswa,
