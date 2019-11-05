@@ -55,8 +55,8 @@ class MahasiswaFactory(PasienFactory):
     kategori = 'Mahasiswa'
     nim = func(faker.itin)
     strata = fatr(lambda obj: choice(['S1', 'S2', 'S3']))
-    internasional = fatr(lambda obj: choice(['true', 'false']))
-    tpb = fatr(lambda obj: choice(['true', 'false']))
+    internasional = fatr(lambda obj: choice([True, False]))
+    tpb = fatr(lambda obj: choice([True, False]))
     program_studi = func(faker.word)
     fakultas = func(faker.word)
 
@@ -81,7 +81,7 @@ class KeluargaKaryawanITBFactory(PasienFactory):
     class Meta:
         model = Keluarga_Karyawan_ITB
 
-    kategori = 'Keluarga Karyawan'
+    kategori = 'Keluarga Karyawan ITB'
     karyawan = factory.SubFactory(KaryawanITBFactory)
 
 class UmumFactory(PasienFactory):
@@ -97,4 +97,5 @@ class MitraKerjaSamaFactory(PasienFactory):
         model = Mitra_Kerja_Sama
 
     organisasi = func(faker.name)
+    kategori = 'Mitra Kerja Sama'
     

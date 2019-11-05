@@ -63,23 +63,33 @@ class Pasien(models.Model):
         Subsidi_Kunjungan.create_from_parameter(self)
         Subsidi_Obat.create_from_parameter(self)
         Subsidi_Tindakan.create_from_parameter(self)
+    
+    def get_child_data(self):
+        if(self.kategori == 'Umum'):
+            return self
+        return getattr(self, self.kategori.lower().replace(' ', '_'))
 
     @classmethod
     def get_kategori_choices(cls):
         return [
-        'Mahasiswa',
-        'Karyawan BMG',
-        'Karyawan ITB',
-        'Keluarga Karyawan ITB',
-        'Umum',
-        'Mitra Kerja Sama'
-    ]
+            'Mahasiswa',
+            'Karyawan BMG',
+            'Karyawan ITB',
+            'Keluarga Karyawan ITB',
+            'Umum',
+            'Mitra Kerja Sama'
+        ]
 
 class Mahasiswa(Pasien):
+    STRATA_CHOICES = [
+        ('S1', 'S1'),
+        ('S2', 'S2'),
+        ('S3', 'S3')
+    ]
     nim = models.CharField(max_length=_short_length, unique=True)
     strata = models.CharField(max_length=_short_length)
-    internasional = models.CharField(max_length=_short_length)
-    tpb = models.CharField(max_length=_short_length)
+    internasional = models.BooleanField(max_length=_short_length)
+    tpb = models.BooleanField(max_length=_short_length)
     program_studi = models.CharField(max_length=_short_length)
     fakultas = models.CharField(max_length=_short_length)
 
@@ -91,6 +101,12 @@ class Karyawan_ITB(Pasien):
 
 class Keluarga_Karyawan_ITB(Pasien):
     karyawan = models.ForeignKey('Karyawan_ITB', on_delete=models.CASCADE)
+
+    def serialize(self):
+        pasien = super().serialize()
+        pasien['nip'] = self.karyawan.nip
+
+        return pasien
 
 class Umum(Pasien):
     pass

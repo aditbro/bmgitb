@@ -4,9 +4,10 @@ from main.models import Client, Pasien, Kunjungan, PembelianOTC, PembelianResep
 from .main import *
 from .auth import *
 
-@allow_only_roles(['admin', 'loket', 'diagnosis'])
+# @allow_only_roles(['admin', 'loket', 'diagnosis'])
 def data_pasien(request, no_pasien):
     pasien = Pasien.objects.get(no_pasien=no_pasien)
+    pasien = pasien.get_child_data()
     context = {
         'Resource': 'Pasien',
         'pasien': pasien.serialize(),

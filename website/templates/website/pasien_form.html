@@ -28,6 +28,68 @@
           <label class="active" for="pasien-nama">Nama Pasien</label>
         </div>
       </div>
+      <div class="kategori-karyawan">
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="pasien-nip" name="pasien-nip" type="text" class="validate" value="{{ pasien.nip }}">
+            <label class="active" for="pasien-nip">NIP Pasien</label>
+          </div>
+        </div>
+      </div>
+      <div class="kategori-keluarga">
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="karyawan-nip" name="karyawan-nip" type="text" class="validate" value="{{ pasien.nip }}">
+            <label class="active" for="karyawan-nip">NIP Karyawan</label>
+          </div>
+        </div>
+      </div>
+      <div class="kategori-mitra">
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="pasien-organisasi" name="pasien-organisasi" type="text" class="validate" value="{{ pasien.organisasi }}">
+            <label class="active" for="pasien-organisasi">Organisasi Pasien</label>
+          </div>
+        </div>
+      </div>
+      <div class="kategori-mahasiswa">
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="pasien-nim" name="pasien-nim" type="text" class="validate" value="{{ pasien.nim }}">
+            <label class="active" for="pasien-nim">NIM Pasien</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="pasien-strata" name="pasien-starta" type="text" class="validate" value="{{ pasien.strata }}">
+            <label class="active" for="pasien-strata">Strata</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="pasien-internasional" name="pasien-internasional" type="text" class="validate" value="{{ pasien.internasional }}">
+            <label class="active" for="pasien-internasional">Mahasiswa Internasional?</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="pasien-tpb" name="pasien-tpb" type="text" class="validate" value="{{ pasien.tpb }}">
+            <label class="active" for="pasien-tpb">Mahasiswa TPB?</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="pasien-program-studi" name="pasien-program-studi" type="text" class="validate" value="{{ pasien.program_studi }}">
+            <label class="active" for="pasien-program-studi">Program Studi Mahasiswa</label>
+          </div>
+        </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="pasien-fakultras" name="pasien-fakultras" type="text" class="validate" value="{{ pasien.fakultras }}">
+            <label class="active" for="pasien-fakultras">Fakultas Mahasiswa</label>
+          </div>
+        </div>
+      </div>
       <div class="row">
         <div class="input-field col s12">
           <input id="pasien-tipe-kartu" name="pasien-tipe-kartu" type="text" class="validate" value="{{ pasien.tipe_kartu_identitas }}">
@@ -125,3 +187,30 @@
   </div>
 </form>
 </div>
+<script>
+  var kategori_field = document.getElementById("pasien-kategori")
+
+  function show_pasien_kategori_field(kategori) {
+    class_name = "kategori-" + kategori.toLowerCase().split(' ')[0]
+    Array.from(document.getElementsByClassName('kategori-mahasiswa')).forEach(function(element) {
+      element.style.display = "none";
+    })
+    Array.from(document.getElementsByClassName('kategori-karyawan')).forEach(function(element) {
+      element.style.display = "none";
+    })
+    Array.from(document.getElementsByClassName('kategori-mitra')).forEach(function(element) {
+      element.style.display = "none";
+    })
+    Array.from(document.getElementsByClassName('kategori-keluarga')).forEach(function(element) {
+      element.style.display = "none";
+    })
+    Array.from(document.getElementsByClassName(class_name)).forEach(function(element) {
+      element.style.display = "block";
+    })
+  }
+
+  show_pasien_kategori_field(kategori_field.value)
+  kategori_field.addEventListener("change", function() {
+    show_pasien_kategori_field(this.value)
+  })
+</script>
